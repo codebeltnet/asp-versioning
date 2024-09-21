@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Codebelt.Extensions.Asp.Versioning</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cuemon.Extensions.AspNetCore.Mvc" Version="8.3.2" />
+    <PackageReference Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json" Version="8.3.2" />
+    <PackageReference Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json" Version="8.3.2" />
+    <PackageReference Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml" Version="8.3.2" />
+    <PackageReference Include="Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Codebelt.Extensions.Asp.Versioning\Codebelt.Extensions.Asp.Versioning.csproj" />
+  </ItemGroup>
+
+</Project>
