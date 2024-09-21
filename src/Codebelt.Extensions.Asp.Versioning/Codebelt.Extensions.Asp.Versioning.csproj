@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ProjectGuid>17df67ca-a395-45e7-b339-68ea22aeb26b</ProjectGuid>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>The Codebelt.Extensions.Asp.Versioning namespace contains types and extension methods that complements the Asp.Versioning namespace by adding new ways of working with versioning for Open API 3.x.</Description>
+    <PackageTags>extension-methods extensions restful-api-versioning versioning</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8'))">
+    <PackageReference Include="Asp.Versioning.Abstractions" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6'))">
+    <PackageReference Include="Asp.Versioning.Abstractions" Version="6.2.1" />
+    <PackageReference Include="Asp.Versioning.Http" Version="6.5.0" />
+    <PackageReference Include="Asp.Versioning.Mvc" Version="6.4.1" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cuemon.AspNetCore" Version="8.3.2" />
+    <PackageReference Include="Cuemon.Core" Version="8.3.2" />
+  </ItemGroup>
+
+</Project>

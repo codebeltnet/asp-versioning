@@ -1,4 +1,4 @@
-- name: ClassLibrary1 API
-  href: api/ClassLibrary1.html
+- name: Asp.Versioning API
+  href: api/Codebelt.Extensions.Asp.Versioning.html
 - name: NuGet
   href: packages
