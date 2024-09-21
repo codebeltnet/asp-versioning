@@ -10,4 +10,4 @@ The `Codebelt.Extensions.Asp.Versioning` namespace contains types and extension 
 
 More documentation available at our documentation site:
 
-- [Codebelt.Extensions.Asp.Versioning](https://docs.Codebelt.net/api/extensions/aspversioning/Codebelt.Extensions.Asp.Versioning.html) 🔗
+- [Codebelt.Extensions.Asp.Versioning](https://versioning.codebelt.net/api/Codebelt.Extensions.Asp.Versioning.html) 🔗
