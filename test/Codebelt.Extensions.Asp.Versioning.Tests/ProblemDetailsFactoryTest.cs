@@ -105,7 +105,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                 Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
                 Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
                 Assert.EndsWith("application/xml", sut.Content.Headers.ContentType.ToString());
-                Assert.True(Match(@"<?xml version=""1.0"" encoding=""utf-8""?><HttpExceptionDescriptor><Error><Status>400</Status><Code>BadRequest</Code><Message>The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.</Message></Error></HttpExceptionDescriptor>", await sut.Content.ReadAsStringAsync()));
+                Assert.True(Match(@"<?xml version=""1.0"" encoding=""utf-8""?><HttpExceptionDescriptor><Error><Instance>http://localhost/fake/throw</Instance><Status>400</Status><Code>BadRequest</Code><Message>The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.</Message></Error><TraceId>*</TraceId></HttpExceptionDescriptor>", await sut.Content.ReadAsStringAsync()));
             }
         }
 
@@ -143,10 +143,12 @@ namespace Codebelt.Extensions.Asp.Versioning
                 Assert.True(Match("""
                                   {
                                     "error": {
+                                      "instance": "http://localhost/fake/throw",
                                       "status": 400,
                                       "code": "BadRequest",
                                       "message": "The HTTP resource that matches the request URI \u0027http://localhost/fake/throw\u0027 does not support the API version \u0027b3\u0027."
-                                    }
+                                    },
+                                    "traceId": "*"
                                   }
                                   """.ReplaceLineEndings(), (await sut.Content.ReadAsStringAsync())));
             }
