@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 For more details, please refer to `PackageReleaseNotes.txt` on a per assembly basis in the `.nuget` folder.
 
 > [!NOTE]  
-> Changelog entries prior to version 8.4.0 was migrated from previous versions of Codebelt.Extensions.Asp.Versioning.
+> Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
 ## [9.0.0] - TBD
 
@@ -19,7 +19,6 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 ### Changed
 
 - RestfulApiVersioningOptions class in the Codebelt.Extensions.Asp.Versioning namespace to include non-official MIME-types in the ValidAcceptHeaders property
-
 
 ## [7.1.0] 2022-12-11
 
