@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Codebelt.Extensions.Asp.Versioning
 {
@@ -162,7 +163,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                        services.AddFaultDescriptorOptions();
                        services.AddControllers(o => o.Filters.AddFaultDescriptor())
                            .AddApplicationPart(typeof(FakeController).Assembly)
-                           .AddYamlFormatters();
+                           .AddYamlFormatters(o => o.Settings.NamingConvention = PascalCaseNamingConvention.Instance);
                        services.AddHttpContextAccessor()
                            .AddRestfulApiVersioning(o =>
                            {
@@ -186,37 +187,45 @@ namespace Codebelt.Extensions.Asp.Versioning
                 Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
                 Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
                 Assert.EndsWith("*/*", sut.Content.Headers.ContentType.ToString());
-                Assert.StartsWith(@"Error:
-  Status: 400
-  Code: BadRequest
-  Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.
-  Failure:
-    Type: Cuemon.AspNetCore.Http.BadRequestException
-    Source: Codebelt.Extensions.Asp.Versioning
-    Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.
-    Stack:
-".ReplaceLineEndings(), await sut.Content.ReadAsStringAsync());
-                Assert.EndsWith(@"Evidence:
-  Request:
-    Location: http://localhost/fake/throw
-    Method: GET
-    Headers:
-      Accept:
-        - text/html
-        - application/xhtml+xml
-        - image/avif
-        - image/webp
-        - image/apng
-        - '*/*; q=0.8'
-        - application/signed-exchange; v=b3; q=0.9
-        - application/json; q=10.0
-      Host:
-        - localhost
-    Query: []
-    Form: 
-    Cookies: []
-    Body: ''
-".ReplaceLineEndings(), await sut.Content.ReadAsStringAsync());
+                Assert.True(Match("""
+                            Error:
+                              Instance: http://localhost/fake/throw
+                              Status: 400
+                              Code: BadRequest
+                              Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.
+                              Failure:
+                                Type: Cuemon.AspNetCore.Http.BadRequestException
+                                Source: Codebelt.Extensions.Asp.Versioning
+                                Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.
+                                Stack:
+                                  - at Codebelt.Extensions.Asp.Versioning.ServiceCollectionExtensions.<>c.<AddRestfulApiVersioning>*
+                                  - at Microsoft.AspNetCore.Http.DefaultProblemDetailsWriter.WriteAsync(ProblemDetailsContext context)
+                                  - at Microsoft.AspNetCore.Http.ProblemDetailsService.TryWriteAsync(ProblemDetailsContext context)
+                                  - at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+                                  - at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+                                StatusCode: 400
+                                ReasonPhrase: Bad Request
+                            Evidence:
+                              Request:
+                                Location: http://localhost/fake/throw
+                                Method: GET
+                                Headers:
+                                  Accept:
+                                    - text/html
+                                    - application/xhtml+xml
+                                    - image/avif
+                                    - image/webp
+                                    - image/apng
+                                    - '*/*; q=0.8'
+                                    - application/signed-exchange; v=b3; q=0.9
+                                    - application/json; q=10.0
+                                  Host:
+                                    - localhost
+                                Query: []
+                                Cookies: []
+                                Body: ''
+                            TraceId: *
+                            """.ReplaceLineEndings(), await sut.Content.ReadAsStringAsync(), o => o.ThrowOnNoMatch = true));
             }
         }
 

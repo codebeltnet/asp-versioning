@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Codebelt.Extensions.Asp.Versioning
 {
@@ -207,7 +208,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                            .AddApplicationPart(typeof(FakeController).Assembly)
                            .AddJsonFormatters()
                            .AddXmlFormatters()
-                           .AddYamlFormatters();
+                           .AddYamlFormatters(o => o.Settings.NamingConvention = PascalCaseNamingConvention.Instance);
                        services.AddHttpContextAccessor();
                        services.AddRestfulApiVersioning();
                    }, app =>
@@ -228,13 +229,14 @@ namespace Codebelt.Extensions.Asp.Versioning
                 Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
                 Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
                 Assert.EndsWith(yamlAccept, sut.Content.Headers.ContentType.ToString());
-                Assert.Equal("""
+                Assert.True(Match("""
                              Error:
+                               Instance: http://localhost/fake/throw
                                Status: 400
                                Code: BadRequest
                                Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'd3'.
-
-                             """, await sut.Content.ReadAsStringAsync(), ignoreLineEndingDifferences: true);
+                             TraceId: *
+                             """.ReplaceLineEndings(), await sut.Content.ReadAsStringAsync(), o => o.ThrowOnNoMatch = true));
             }
         }
 
