@@ -11,7 +11,7 @@ using Cuemon.AspNetCore.Http;
 using Cuemon.Diagnostics;
 using Cuemon.Extensions.AspNetCore.Diagnostics;
 using Cuemon.Extensions.AspNetCore.Mvc.Filters;
-using Cuemon.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json;
+using Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json;
 using Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json;
 using Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml;
 using Microsoft.AspNetCore.Builder;
