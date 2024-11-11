@@ -13,48 +13,6 @@ namespace Codebelt.Extensions.Asp.Versioning
     /// <see cref="IValidatableParameterObject" />
     public class RestfulApiVersioningOptions : IValidatableParameterObject
     {
-#if NET6_0
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RestfulApiVersioningOptions"/> class.
-        /// </summary>
-        /// <remarks>
-        /// The following table shows the initial property values for an instance of <see cref="RestfulApiVersioningOptions"/>.
-        /// <list type="table">
-        ///     <listheader>
-        ///         <term>Property</term>
-        ///         <description>Initial Value</description>
-        ///     </listheader>
-        ///     <item>
-        ///         <term><see cref="ApiVersionSelectorType"/></term>
-        ///         <description><c>typeof(CurrentImplementationApiVersionSelector)</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="ProblemDetailsFactoryType"/></term>
-        ///         <description><c>typeof(RestfulProblemDetailsFactory)</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="Conventions"/></term>
-        ///         <description><c>new ApiVersionConventionBuilder()</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="DefaultApiVersion"/></term>
-        ///         <description><c>ApiVersion.Default</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="ParameterName"/></term>
-        ///         <description><c>v</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="ReportApiVersions"/></term>
-        ///         <description><c>false</c></description>
-        ///     </item>
-        ///     <item>
-        ///         <term><see cref="ValidAcceptHeaders"/></term>
-        ///         <description><c>application/json, application/xml, application/vnd</c></description>
-        ///     </item>
-        /// </list>
-        /// </remarks>
-#else
         /// <summary>
         /// Initializes a new instance of the <see cref="RestfulApiVersioningOptions"/> class.
         /// </summary>
@@ -95,13 +53,9 @@ namespace Codebelt.Extensions.Asp.Versioning
         ///     </item>
         /// </list>
         /// </remarks>
-#endif
         public RestfulApiVersioningOptions()
         {
             ApiVersionSelectorType = typeof(CurrentImplementationApiVersionSelector);
-#if NET6_0
-            ProblemDetailsFactoryType = typeof(RestfulProblemDetailsFactory);
-#endif
             Conventions = new ApiVersionConventionBuilder();
             DefaultApiVersion = ApiVersion.Default;
             ParameterName = "v";
@@ -119,26 +73,11 @@ namespace Codebelt.Extensions.Asp.Versioning
             };
         }
 
-#if NET6_0
-        /// <summary>
-        /// Specify what <see cref="IProblemDetailsFactory"/> to set on the <seealso cref="ProblemDetailsFactoryType"/>. Default is <see cref="RestfulProblemDetailsFactory"/>.
-        /// </summary>
-        /// <typeparam name="T">The type that implements the <see cref="IProblemDetailsFactory"/> interface.</typeparam>
-        /// <returns>A reference to this instance so that additional calls can be chained.</returns>
-        public RestfulApiVersioningOptions UseProblemDetailsFactory<T>() where T : class, IProblemDetailsFactory
-        {
-            ProblemDetailsFactoryType = typeof(T);
-            return this;
-        }
-#endif
-
-#if NET8_0_OR_GREATER
         /// <summary>
         /// Gets or sets a value indicating whether responses will be based on the built in support for RFC 7807.
         /// </summary>
         /// <value><c>true</c> if the responses will be based on the built in support for RFC 7807; otherwise, <c>false</c>.</value>
         public bool UseBuiltInRfc7807 { get; set; }
-#endif
 
         /// <summary>
         /// Gets or sets the valid accept headers used as a filter by <see cref="RestfulApiVersionReader"/>.
@@ -146,14 +85,6 @@ namespace Codebelt.Extensions.Asp.Versioning
         /// <value>The valid accept headers used as a filter by <see cref="RestfulApiVersionReader"/>.</value>
         /// <remarks>This option was introduced to have an inclusive filter on what MIME types to consider valid when parsing HTTP Accept headers; for more information have a read at https://github.com/dotnet/aspnet-api-versioning/issues/887</remarks>
         public IList<string> ValidAcceptHeaders { get; set; }
-
-#if NET6_0
-        /// <summary>
-        /// Gets the implementation type of the <see cref="IProblemDetailsFactory"/>.
-        /// </summary>
-        /// <value>The implementation type of the <see cref="IProblemDetailsFactory"/>.</value>
-        public Type ProblemDetailsFactoryType { get; private set; }
-#endif
 
         /// <summary>
         /// Specify what <see cref="IApiVersionSelector"/> to set on the <seealso cref="ApiVersionSelectorType"/>. Default is <see cref="CurrentImplementationApiVersionSelector"/>.
