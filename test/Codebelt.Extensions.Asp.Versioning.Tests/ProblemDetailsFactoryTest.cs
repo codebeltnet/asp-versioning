@@ -45,7 +45,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                    {
                        app.UseRouting();
                        app.UseEndpoints(routes => { routes.MapControllers(); });
-                   }, hostFixture: null))
+                   }))
             {
                 var client = app.Host.GetTestClient();
                 client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
@@ -95,7 +95,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                               app.UseRouting();
                               app.UseEndpoints(routes => { routes.MapControllers(); });
 
-                          }, hostFixture: null))
+                          }))
             {
                 var client = app.Host.GetTestClient();
                 client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/xml;q=0.9");
@@ -130,7 +130,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                        app.UseRouting();
                        app.UseEndpoints(routes => { routes.MapControllers(); });
 
-                   }, hostFixture: null))
+                   }))
             {
                 var client = app.Host.GetTestClient();
                 client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
@@ -176,7 +176,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                               app.UseRouting();
                               app.UseEndpoints(routes => { routes.MapControllers(); });
 
-                          }, hostFixture: null))
+                          }))
             {
                 var client = app.Host.GetTestClient();
                 client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
@@ -245,7 +245,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                               app.UseRouting();
                               app.UseEndpoints(routes => { routes.MapControllers(); });
 
-                          }, hostFixture: null))
+                          }))
             {
                 var client = app.Host.GetTestClient();
                 client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
@@ -278,7 +278,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                    {
                        app.UseRouting();
                        app.UseEndpoints(routes => { routes.MapControllers(); });
-                   }, hostFixture: null))
+                   }))
             {
                 var client = app.Host.GetTestClient();
                 client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
