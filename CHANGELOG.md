@@ -7,6 +7,10 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [9.0.3] - 2025-05-25
+
+This is a service update that focuses on package dependencies.
+
 ## [9.0.2] - 2025-04-16
 
 This is a service update that focuses on package dependencies.
