@@ -7,8 +7,8 @@
     <PackageVersion Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
-    <PackageVersion Include="Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json" Version="9.0.4" />
-    <PackageVersion Include="Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml" Version="9.0.4" />
+    <PackageVersion Include="Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json" Version="9.0.5" />
+    <PackageVersion Include="Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml" Version="9.0.5" />
     <PackageVersion Include="Codebelt.Extensions.Xunit.App" Version="10.0.4" />
     <PackageVersion Include="Cuemon.AspNetCore" Version="9.0.7" />
     <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc" Version="9.0.7" />
