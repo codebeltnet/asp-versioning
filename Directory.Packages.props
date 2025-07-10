@@ -9,11 +9,11 @@
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageVersion Include="Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json" Version="9.0.4" />
     <PackageVersion Include="Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml" Version="9.0.4" />
-    <PackageVersion Include="Codebelt.Extensions.Xunit.App" Version="10.0.3" />
-    <PackageVersion Include="Cuemon.AspNetCore" Version="9.0.6" />
-    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc" Version="9.0.6" />
-    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json" Version="9.0.6" />
-    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml" Version="9.0.6" />
+    <PackageVersion Include="Codebelt.Extensions.Xunit.App" Version="10.0.4" />
+    <PackageVersion Include="Cuemon.AspNetCore" Version="9.0.7" />
+    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc" Version="9.0.7" />
+    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json" Version="9.0.7" />
+    <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml" Version="9.0.7" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="MinVer" Version="6.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
