@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using Xunit.Abstractions;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace Codebelt.Extensions.Asp.Versioning
@@ -28,7 +27,6 @@ namespace Codebelt.Extensions.Asp.Versioning
         {
         }
 
-#if NET8_0_OR_GREATER
         [Fact]
         public async Task GetRequest_ShouldFailWithBadRequest_FormattedAsRfc7807_As_b3_IsAnUnknownVersion()
         {
@@ -58,20 +56,13 @@ namespace Codebelt.Extensions.Asp.Versioning
                 Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
                 Assert.EndsWith("application/problem+json", sut.Content.Headers.ContentType.ToString());
 
-#if NET9_0
+
                 var expected = """{"type":"https://docs.api-versioning.org/problems#invalid","title":"Invalid API version","status":400,"detail":"The HTTP resource that matches the request URI 'http://localhost/fake/' does not support the API version 'b3'.","traceId":"*"}""";
                 Assert.True(Match(expected, await sut.Content.ReadAsStringAsync()));
-#else
-                var expected = @"{""type"":""https://docs.api-versioning.org/problems#invalid"",""title"":""Invalid API version"",""status"":400,""detail"":""The HTTP resource that matches the request URI 'http://localhost/fake/' does not support the API version 'b3'.""}";
-                Assert.Equal(expected, await sut.Content.ReadAsStringAsync());
-#endif
-
-
 
                 // sadly Microsoft does not use the formatter we feed into the pipeline .. they use their own horrid WriteJsonAsync implementation .. 
             }
         }
-#endif
 
         [Fact]
         public async Task GetRequest_ShouldFailWithBadRequestFormattedAsXmlResponse_As_b3_IsAnUnknownVersion()

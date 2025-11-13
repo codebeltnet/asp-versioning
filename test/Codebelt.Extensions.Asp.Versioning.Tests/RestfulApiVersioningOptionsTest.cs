@@ -3,7 +3,6 @@ using Asp.Versioning;
 using Codebelt.Extensions.Xunit;
 using Cuemon;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Codebelt.Extensions.Asp.Versioning
 {
