@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using Xunit.Abstractions;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace Codebelt.Extensions.Asp.Versioning
