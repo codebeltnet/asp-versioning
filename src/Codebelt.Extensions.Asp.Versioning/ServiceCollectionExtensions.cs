@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Asp.Versioning;
 using Cuemon;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +17,11 @@ namespace Codebelt.Extensions.Asp.Versioning
         /// <param name="services">The <see cref="IServiceCollection"/> to extend.</param>
         /// <param name="setup">The <see cref="RestfulApiVersioningOptions"/> that may be configured.</param>
         /// <returns>A reference to <paramref name="services" /> so that additional calls can be chained.</returns>
-        /// <remarks>This is a convenient method to add API versioning to your ASP.NET Core WebApi. Call <c>AddApiVersioning</c>, <c>AddMvc</c> and <c>AddApiExplorer</c>. Configuration, which is optimized for RESTful APIs, are done through <paramref name="setup"/>.</remarks>
+        /// <summary>
+        /// Adds and configures RESTful API versioning, related MVC conventions, API Explorer grouping, and Problem Details handling to the service collection.
+        /// </summary>
+        /// <param name="setup">Optional configurator for RestfulApiVersioningOptions that controls default API version, valid Accept headers, parameter name, conventions, API version selector type, and Problem Details behavior.</param>
+        /// <returns>The original IServiceCollection instance for chaining.</returns>
         public static IServiceCollection AddRestfulApiVersioning(this IServiceCollection services, Action<RestfulApiVersioningOptions> setup = null)
         {
             Validator.ThrowIfNull(services);
