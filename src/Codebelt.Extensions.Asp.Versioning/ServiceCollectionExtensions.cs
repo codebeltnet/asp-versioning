@@ -2,10 +2,7 @@
 using Asp.Versioning;
 using Cuemon;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-#if NET8_0_OR_GREATER
 using Cuemon.AspNetCore.Http;
-#endif
 
 namespace Codebelt.Extensions.Asp.Versioning
 {
@@ -43,11 +40,6 @@ namespace Codebelt.Extensions.Asp.Versioning
                 o.SubstituteApiVersionInUrl = true;
             });
 
-#if NET6_0
-            if (options.ProblemDetailsFactoryType != null && options.ProblemDetailsFactoryType != typeof(DefaultProblemDetailsFactory)) { services.Replace(ServiceDescriptor.Singleton(_ => Activator.CreateInstance(options.ProblemDetailsFactoryType) as IProblemDetailsFactory)); }
-#endif
-
-#if NET8_0_OR_GREATER
             if (options.UseBuiltInRfc7807)
             {
                 services.AddProblemDetails();
@@ -65,7 +57,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                     throw new InternalServerErrorException(pd.Detail);
                 });
             }
-#endif
+
             return services;
         }
     }
