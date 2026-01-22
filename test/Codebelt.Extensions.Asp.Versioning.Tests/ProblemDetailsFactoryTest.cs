@@ -57,7 +57,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                 Assert.EndsWith("application/problem+json", sut.Content.Headers.ContentType.ToString());
 
 
-                var expected = """{"type":"https://docs.api-versioning.org/problems#invalid","title":"Invalid API version","status":400,"detail":"The HTTP resource that matches the request URI 'http://localhost/fake/' does not support the API version 'b3'.","traceId":"*"}""";
+                var expected = """{"type":"https://docs.api-versioning.org/problems#invalid","title":"Invalid API version","status":400,"detail":"The HTTP resource that matches the request URI 'http://localhost/fake/' does not support the API version 'b3'.","code":"InvalidApiVersion","traceId":"*"}""";
                 Assert.True(Match(expected, await sut.Content.ReadAsStringAsync()));
 
                 // sadly Microsoft does not use the formatter we feed into the pipeline .. they use their own horrid WriteJsonAsync implementation .. 

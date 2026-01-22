@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Codebelt.Extensions.Asp.Versioning/Codebelt.Extensions.Asp.Versioning.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Codebelt.Extensions.Asp.Versioning.Tests/Codebelt.Extensions.Asp.Versioning.Tests.csproj" />
+  </Folder>
+</Solution>
