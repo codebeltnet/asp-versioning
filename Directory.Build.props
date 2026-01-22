@@ -17,7 +17,7 @@
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'false'">
     <TargetFrameworks>net10.0;net9.0</TargetFrameworks>
-    <Copyright>Copyright © Geekle 2024-2025. All rights reserved.</Copyright>
+    <Copyright>Copyright © Geekle 2024-2026. All rights reserved.</Copyright>
     <Authors>gimlichael</Authors>
     <Company>Geekle</Company>
     <Product>Extensions for Asp.Versioning API by Codebelt</Product>
