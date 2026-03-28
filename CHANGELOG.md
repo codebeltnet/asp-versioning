@@ -7,6 +7,19 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.0.5] - 2026-03-28
+
+This is a patch release that upgrades package dependencies and delivers several ALM refinements: a cleaner `PackageReleaseNotes.txt` generation pipeline, improved `Directory.Build.targets` file reading, an expanded test-environment matrix, and a documentation toolchain bump.
+
+### Changed
+
+- Dependencies upgraded to the latest compatible versions for all supported target frameworks (.NET 10 and .NET 9),
+- `Directory.Build.targets` to read `PackageReleaseNotes.txt` via `File.ReadAllText` instead of the line-by-line `ReadLinesFromFile` / `@(…, '%0A')` approach, ensuring newlines are preserved faithfully in NuGet metadata,
+- `service-update.yml` workflow to emit clean newlines (no trailing space) in generated `PackageReleaseNotes.txt` entries,
+- `testenvironments.json` Docker test entry split into separate `Docker-Ubuntu (net9)` and `Docker-Ubuntu (net10)` environments using versioned image tags (`9` / `10`) for cleaner per-TFM test isolation,
+- DocFX image bumped from `2.78.4` to `2.78.5` in `Dockerfile.docfx`,
+- `bump-nuget.py` extended with a `carter` → `Codebelt.Extensions.Carter` source-package mapping.
+
 ## [10.0.4] - 2026-02-28
 
 This is a service update that focuses on package dependencies.
@@ -102,3 +115,29 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - ApplicationBuilderExtensions class in the Codebelt.Extensions.Asp.Versioning namespace that consist of extension methods for the IApplicationBuilder interface: UseRestfulApiVersioning
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
+
+[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.5...HEAD
+[10.0.5]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.4...v10.0.5
+[10.0.4]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.3...v10.0.4
+[10.0.3]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.2...v10.0.3
+[10.0.2]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.1...v10.0.2
+[10.0.1]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.0...v10.0.1
+[10.0.0]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.8...v10.0.0
+[9.0.8]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.7...v9.0.8
+[9.0.7]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.6...v9.0.7
+[9.0.6]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.5...v9.0.6
+[9.0.5]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.4...v9.0.5
+[9.0.4]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.3...v9.0.4
+[9.0.3]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.2...v9.0.3
+[9.0.2]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.1...v9.0.2
+[9.0.1]: https://github.com/codebeltnet/asp-versioning/compare/v9.0.0...v9.0.1
+[9.0.0]: https://github.com/codebeltnet/asp-versioning/compare/v8.4.0...v9.0.0
+[8.4.0]: https://github.com/codebeltnet/asp-versioning/compare/v8.3.2...v8.4.0
+[8.3.2]: https://github.com/codebeltnet/asp-versioning/compare/v8.3.0...v8.3.2
+[8.3.0]: https://github.com/codebeltnet/asp-versioning/compare/v8.2.0...v8.3.0
+[8.2.0]: https://github.com/codebeltnet/asp-versioning/compare/v8.1.0...v8.2.0
+[8.1.0]: https://github.com/codebeltnet/asp-versioning/compare/v8.0.1...v8.1.0
+[8.0.1]: https://github.com/codebeltnet/asp-versioning/compare/v8.0.0...v8.0.1
+[8.0.0]: https://github.com/codebeltnet/asp-versioning/compare/v7.1.0...v8.0.0
+[7.1.0]: https://github.com/codebeltnet/asp-versioning/compare/v7.0.0...v7.1.0
+[7.0.0]: https://github.com/codebeltnet/asp-versioning/releases/tag/v7.0.0
