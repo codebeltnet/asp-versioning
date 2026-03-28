@@ -16,8 +16,8 @@
     <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml" Version="10.5.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
     <PackageVersion Include="MinVer" Version="7.0.0" />
-    <PackageVersion Include="coverlet.collector" Version="8.0.0" />
-    <PackageVersion Include="coverlet.msbuild" Version="8.0.0" />
+    <PackageVersion Include="coverlet.collector" Version="8.0.1" />
+    <PackageVersion Include="coverlet.msbuild" Version="8.0.1" />
     <PackageVersion Include="xunit.v3" Version="3.2.2" />
     <PackageVersion Include="xunit.v3.runner.console" Version="3.2.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
