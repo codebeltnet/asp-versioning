@@ -9,7 +9,12 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 
 ## [10.0.7] - 2026-05-23
 
-This is a service update that focuses on package dependencies.
+This is a service update that focuses on package dependencies and explicit dual-framework support through conditionally-targeted Asp.Versioning package versions, ensuring compatibility with .NET 9 (Asp.Versioning 8.1.1) and .NET 10 (Asp.Versioning 10.0.0).
+
+### Changed
+
+- `Directory.Packages.props` to conditionally target Asp.Versioning package versions: version 8.1.1 for .NET 9 target framework and version 10.0.0 for .NET 10 target framework, providing version-appropriate behavior for each framework,
+- Dependencies upgraded to the latest compatible versions for all supported target frameworks (.NET 10 and .NET 9).
 
 ## [10.0.6] - 2026-04-18
 
@@ -124,7 +129,9 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
-[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.5...HEAD
+[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.7...HEAD
+[10.0.7]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.6...v10.0.7
+[10.0.6]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.5...v10.0.6
 [10.0.5]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.4...v10.0.5
 [10.0.4]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.3...v10.0.4
 [10.0.3]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.2...v10.0.3
