@@ -73,6 +73,16 @@ namespace Codebelt.Extensions.Asp.Versioning
         }
 
         [Fact]
+        public void RestfulApiVersioningOptions_UseApiVersionSelector_ShouldUpdateApiVersionSelectorType()
+        {
+            var sut = new RestfulApiVersioningOptions();
+            var result = sut.UseApiVersionSelector<LowestImplementedApiVersionSelector>();
+
+            Assert.Same(sut, result);
+            Assert.Equal(typeof(LowestImplementedApiVersionSelector), sut.ApiVersionSelectorType);
+        }
+
+        [Fact]
         public void RestfulApiVersioningOptions_ShouldHaveDefaultValues()
         {
             var sut = new RestfulApiVersioningOptions();
