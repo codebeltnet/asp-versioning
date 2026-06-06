@@ -6,14 +6,17 @@ using Codebelt.Extensions.Asp.Versioning.Assets;
 using Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml;
 using Codebelt.Extensions.Xunit;
 using Codebelt.Extensions.Xunit.Hosting.AspNetCore;
+using Cuemon.AspNetCore.Diagnostics;
 using Cuemon.AspNetCore.Http;
 using Cuemon.Diagnostics;
 using Cuemon.Extensions.AspNetCore.Diagnostics;
 using Cuemon.Extensions.AspNetCore.Mvc.Filters;
 using Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json;
 using Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml;
+using Cuemon.Extensions.AspNetCore.Text.Json.Formatters;
 using Cuemon.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -25,6 +28,68 @@ namespace Codebelt.Extensions.Asp.Versioning
     {
         public ProblemDetailsFactoryTest(ITestOutputHelper output) : base(output)
         {
+        }
+
+        [Fact]
+        public async Task UseFaultDescriptorExceptionHandler_ShouldFormatException_WhenRequestServicesIsWrappedByAspVersioningInjectApiVersion()
+        {
+            using (var app = WebHostTestFactory.Create(services =>
+                   {
+                       services.AddFaultDescriptorOptions(o => o.FaultDescriptor = PreferredFaultDescriptor.ProblemDetails);
+                       services.AddJsonExceptionResponseFormatter();
+                   }, app =>
+                   {
+                       app.UseFaultDescriptorExceptionHandler();
+                       app.Use((System.Func<HttpContext, System.Func<Task>, Task>)((context, _) =>
+                       {
+                           context.RequestServices = new global::Asp.Versioning.Builder.EndpointBuilderFinalizer.InjectApiVersion(context.RequestServices);
+                           throw new NotFoundException();
+                       }));
+                   }))
+            {
+                var client = app.Host.GetTestClient();
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                var sut = await client.GetAsync("/");
+                var body = await sut.Content.ReadAsStringAsync();
+
+                TestOutput.WriteLine(body);
+
+                Assert.Equal(HttpStatusCode.NotFound, sut.StatusCode);
+                Assert.Equal("application/json", sut.Content.Headers.ContentType.MediaType);
+                Assert.Contains("\"title\": \"NotFound\"", body, System.StringComparison.Ordinal);
+                Assert.Contains("\"status\": 404", body, System.StringComparison.Ordinal);
+            }
+        }
+
+        [Fact]
+        public async Task UseFaultDescriptorExceptionHandler_ShouldFormatException_WhenRequestServicesIsWrappedByDelegatingServiceProvider()
+        {
+            using (var app = WebHostTestFactory.Create(services =>
+                   {
+                       services.AddFaultDescriptorOptions(o => o.FaultDescriptor = PreferredFaultDescriptor.ProblemDetails);
+                       services.AddJsonExceptionResponseFormatter();
+                   }, app =>
+                   {
+                       app.UseFaultDescriptorExceptionHandler();
+                       app.Use((System.Func<HttpContext, System.Func<Task>, Task>)((context, _) =>
+                       {
+                           context.RequestServices = new DelegatingServiceProvider(context.RequestServices);
+                           throw new NotFoundException();
+                       }));
+                   }))
+            {
+                var client = app.Host.GetTestClient();
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                var sut = await client.GetAsync("/");
+                var body = await sut.Content.ReadAsStringAsync();
+
+                TestOutput.WriteLine(body);
+
+                Assert.Equal(HttpStatusCode.NotFound, sut.StatusCode);
+                Assert.Equal("application/json", sut.Content.Headers.ContentType.MediaType);
+                Assert.Contains("\"title\": \"NotFound\"", body, System.StringComparison.Ordinal);
+                Assert.Contains("\"status\": 404", body, System.StringComparison.Ordinal);
+            }
         }
 
         [Fact]
