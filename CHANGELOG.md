@@ -7,6 +7,10 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.0.8] - 2026-06-06
+
+This is a service update that focuses on package dependencies.
+
 ## [10.0.7] - 2026-05-23
 
 This is a service update that focuses on package dependencies and explicit dual-framework support through conditionally-targeted Asp.Versioning package versions, ensuring compatibility with .NET 9 (Asp.Versioning 8.1.1) and .NET 10 (Asp.Versioning 10.0.0).
