@@ -10,7 +10,7 @@
     <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc" Version="10.5.4" />
     <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json" Version="10.5.4" />
     <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml" Version="10.5.4" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
     <PackageVersion Include="MinVer" Version="7.0.0" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
     <PackageVersion Include="coverlet.msbuild" Version="10.0.1" />
