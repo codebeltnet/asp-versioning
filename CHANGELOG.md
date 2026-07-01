@@ -7,9 +7,23 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
-## [10.0.9] - 2026-06-30
+## [10.0.9] - 2026-07-01
 
-This is a service update that focuses on package dependencies.
+This is a patch release focused on package dependency upgrades, comprehensive public API documentation,
+and CI/CD pipeline refinements to strengthen deployment safety and maintainability.
+
+### Added
+
+- DocFX overwrite files for all four public non-abstraction types (`ApplicationBuilderExtensions`, `RestfulApiVersionReader`, `RestfulApiVersioningOptions`, `ServiceCollectionExtensions`) in the Codebelt.Extensions.Asp.Versioning namespace, including usage examples and availability notes,
+- `dotnet-docfx-digest` maintenance block in `AGENTS.md` to persist documentation rules for the public API surface.
+
+### Changed
+
+- Dependencies upgraded to the latest compatible versions: `Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json` to 10.1.5, `Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml` to 10.1.5, `Codebelt.Extensions.Xunit.App` to 11.1.1, Cuemon packages to 10.5.4, and `Microsoft.NET.Test.Sdk` to 18.7.0,
+- DocFX Dockerfile base image advanced to nginx 1.31.2-alpine for latest security and stability fixes,
+- `docfx.json` configuration split so namespace and type overwrite files are scoped under `build.overwrite` while remaining excluded from `build.content`,
+- CI/CD pipeline deployment condition tightened to require the build, pack, test-quality-gate, SonarCloud, Codecov, and CodeQL jobs to succeed before the NuGet deploy step runs, ensuring a skipped optional job can no longer suppress deployment,
+- Namespace overview documentation rewritten to lead with the developer problem and provide start-here guidance.
 
 ## [10.0.8] - 2026-06-06
 
@@ -137,7 +151,9 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
-[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.7...HEAD
+[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.9...HEAD
+[10.0.9]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.8...v10.0.9
+[10.0.8]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.7...v10.0.8
 [10.0.7]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.6...v10.0.7
 [10.0.6]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.5...v10.0.6
 [10.0.5]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.4...v10.0.5
