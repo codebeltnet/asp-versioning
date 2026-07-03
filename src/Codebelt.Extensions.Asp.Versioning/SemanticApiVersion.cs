@@ -14,6 +14,7 @@ namespace Codebelt.Extensions.Asp.Versioning;
 public sealed class SemanticApiVersion : ApiVersion
 {
     private int _hashCode;
+    private bool _hashCodeComputed;
 
     /// <summary>
     /// Creates a new instance of the <see cref="SemanticApiVersion"/> class from a <see cref="Version"/> object.
@@ -113,7 +114,7 @@ public sealed class SemanticApiVersion : ApiVersion
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        if (_hashCode != default)
+        if (_hashCodeComputed)
         {
             return _hashCode;
         }
@@ -125,7 +126,9 @@ public sealed class SemanticApiVersion : ApiVersion
         hash.Add(Prerelease, StringComparer.Ordinal);
         hash.Add(BuildMetadata, StringComparer.Ordinal);
 
-        return _hashCode = hash.ToHashCode();
+        _hashCode = hash.ToHashCode();
+        _hashCodeComputed = true;
+        return _hashCode;
     }
 
     /// <inheritdoc />
