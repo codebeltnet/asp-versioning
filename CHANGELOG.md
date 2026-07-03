@@ -7,6 +7,21 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.1.0] - 2026-07-03
+
+This is a minor release introducing Semantic Versioning support for APIs that require major.minor.patch versioning with pre-release and build metadata beyond standard Asp.Versioning.ApiVersion. The release also includes dependency service updates and enhanced CI/CD safety.
+
+### Added
+
+- `SemanticApiVersion`, `SemanticApiVersionParser`, `SemanticApiVersionFormatter`, `SemanticApiVersionAttribute`, and `MapToSemanticApiVersionAttribute` types for APIs requiring Semantic Versioning compliance including full build-metadata awareness and pre-release support,
+- `VersionConversionOptions` to control how .NET four-part `Version` objects are translated into `SemanticApiVersion` instances,
+- Comprehensive DocFX documentation for all semantic versioning types with usage examples,
+- Full test coverage for semantic version parsing, formatting, comparison, and integration within the API explorer.
+
+### Changed
+
+- Dependencies upgraded to the latest compatible versions: `Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json` to 10.1.5, `Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml` to 10.1.5, `Codebelt.Extensions.Xunit.App` to 11.1.1, Cuemon packages to 10.5.4, and `Microsoft.NET.Test.Sdk` to 18.7.0.
+
 ## [10.0.9] - 2026-07-01
 
 This is a patch release focused on package dependency upgrades, comprehensive public API documentation,
@@ -151,7 +166,8 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
-[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.9...HEAD
+[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.1.0...HEAD
+[10.1.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.9...v10.1.0
 [10.0.9]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.8...v10.0.9
 [10.0.8]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.7...v10.0.8
 [10.0.7]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.6...v10.0.7
