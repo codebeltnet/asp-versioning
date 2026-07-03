@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Asp.Versioning;
 using Codebelt.Extensions.Xunit;
 using Xunit;
@@ -66,6 +67,22 @@ namespace Codebelt.Extensions.Asp.Versioning
             var hashCode = sut.GetHashCode();
 
             Assert.Equal(hashCode, sut.GetHashCode());
+        }
+
+        [Fact]
+        public void GetHashCode_ShouldReturnCachedZeroHashCode_WhenZeroValueHasBeenComputed()
+        {
+            var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build.5");
+            var hashCodeField = typeof(SemanticApiVersion).GetField("_hashCode", BindingFlags.Instance | BindingFlags.NonPublic);
+            var hashCodeComputedField = typeof(SemanticApiVersion).GetField("_hashCodeComputed", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.NotNull(hashCodeField);
+            Assert.NotNull(hashCodeComputedField);
+
+            hashCodeField!.SetValue(sut, 0);
+            hashCodeComputedField!.SetValue(sut, true);
+
+            Assert.Equal(0, sut.GetHashCode());
         }
 
         [Fact]
@@ -212,6 +229,8 @@ namespace Codebelt.Extensions.Asp.Versioning
         [InlineData("VV'-'S'+'B", "1.2-alpha+build.5")]
         [InlineData("VV\"-\"S\"+\"B", "1.2-alpha+build.5")]
         [InlineData("V'.'v", "1.2")]
+        [InlineData("V'.'v'.'P", "1.2.3")]
+        [InlineData("M'.'m'.'P'-'R", "1.2.3-alpha")]
         [InlineData("VVVV'+'B", "1.2-alpha+build.5")]
         public void ToString_ShouldReturnFormattedVersion_WhenFormatIsSupported(string format, string expected)
         {

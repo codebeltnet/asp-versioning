@@ -107,8 +107,10 @@ public sealed class SemanticApiVersionFormatter : IFormatProvider, ICustomFormat
 
             text.Append(c switch
             {
-                'v' => version.MinorVersion.GetValueOrDefault().ToString(CultureInfo.InvariantCulture),
-                'S' => version.Prerelease ?? string.Empty,
+                'V' or 'M' => version.MajorVersion.GetValueOrDefault().ToString(CultureInfo.InvariantCulture),
+                'v' or 'm' => version.MinorVersion.GetValueOrDefault().ToString(CultureInfo.InvariantCulture),
+                'P' => version.PatchVersion.ToString(CultureInfo.InvariantCulture),
+                'S' or 'R' => version.Prerelease ?? string.Empty,
                 'B' => version.BuildMetadata ?? string.Empty,
                 _ => throw new FormatException($"The '{format}' format is not supported.")
             });
