@@ -72,15 +72,6 @@ public sealed class SemanticApiVersionFormatter : IFormatProvider, ICustomFormat
         return string.Create(CultureInfo.InvariantCulture, $"{version.MajorVersion.GetValueOrDefault()}.{version.MinorVersion.GetValueOrDefault()}");
     }
 
-    private static string FormatMajorOptionalMinor(SemanticApiVersion version)
-    {
-        var text = version.MinorVersion.GetValueOrDefault() == 0
-            ? version.MajorVersion.GetValueOrDefault().ToString(CultureInfo.InvariantCulture)
-            : FormatMajorMinor(version);
-
-        return AppendPrerelease(text, version);
-    }
-
     private static string FormatMajorMinorWithPrerelease(SemanticApiVersion version)
     {
         return AppendPrerelease(FormatMajorMinor(version), version);
