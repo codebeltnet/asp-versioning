@@ -447,6 +447,52 @@ namespace Codebelt.Extensions.Asp.Versioning
             Assert.Equal("setup", sut.ParamName);
         }
 
+        [Fact]
+        public void ToString_ShouldReturnDefaultFormat_WhenCalledWithoutParameters()
+        {
+            var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build");
+
+            var result = sut.ToString();
+
+            Assert.Equal("1.2.3-alpha+build", result);
+        }
+
+        [Fact]
+        public void ToString_ShouldReturnFormattedVersion_WhenCalledWithFormatOnly()
+        {
+            var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build");
+
+            var result = sut.ToString("G");
+
+            Assert.Equal("1.2.3-alpha+build", result);
+        }
+
+        [Fact]
+        public void TryFormat_ShouldHandleEmptyFormatSpan()
+        {
+            Span<char> destination = stackalloc char[32];
+            var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build");
+            ReadOnlySpan<char> format = default;
+
+            var result = sut.TryFormat(destination, out var charsWritten, format, null);
+
+            Assert.True(result);
+            Assert.Equal("1.2.3-alpha+build", destination[..charsWritten].ToString());
+        }
+
+        [Fact]
+        public void TryFormat_ShouldReturnZeroCharsWritten_WhenCopyFails()
+        {
+            Span<char> destination = stackalloc char[5];
+            var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build");
+            ReadOnlySpan<char> format = default;
+
+            var result = sut.TryFormat(destination, out var charsWritten, format, null);
+
+            Assert.False(result);
+            Assert.Equal(0, charsWritten);
+        }
+
         private sealed class SemanticApiVersionFormatterProvider : IFormatProvider
         {
             private readonly SemanticApiVersionFormatter _formatter;
