@@ -21,6 +21,35 @@ namespace Codebelt.Extensions.Asp.Versioning
         }
 
         [Fact]
+        public void VersionConversionOptions_IncludeRevisionIsFalse_ShouldAllowInvalidRevisionIdentifier()
+        {
+            var sut = new VersionConversionOptions
+            {
+                IncludeRevision = false,
+                RevisionIdentifier = null
+            };
+
+            sut.ValidateOptions();
+            Validator.ThrowIfInvalidOptions(sut);
+        }
+
+        [Theory]
+        [InlineData("build")]
+        [InlineData("build.01")]
+        [InlineData("build-1")]
+        public void VersionConversionOptions_IncludeRevisionIsTrueAndRevisionIdentifierIsValid_ShouldPassValidation(string revisionIdentifier)
+        {
+            var sut = new VersionConversionOptions
+            {
+                IncludeRevision = true,
+                RevisionIdentifier = revisionIdentifier
+            };
+
+            sut.ValidateOptions();
+            Validator.ThrowIfInvalidOptions(sut);
+        }
+
+        [Fact]
         public void VersionConversionOptions_IncludeRevisionIsTrueAndRevisionIdentifierIsNull_ShouldThrowInvalidOperationException()
         {
             var sut1 = new VersionConversionOptions

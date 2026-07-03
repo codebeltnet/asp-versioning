@@ -47,9 +47,63 @@ namespace Codebelt.Extensions.Asp.Versioning
             Assert.NotEqual(sut1.GetHashCode(), sut2.GetHashCode());
         }
 
+        [Fact]
+        public void Equals_ShouldReturnExpectedResult_WhenComparingDifferentObjectTypes()
+        {
+            var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build.5");
+
+            Assert.True(sut.Equals(new SemanticApiVersion(1, 2, 3, "alpha", "build.5")));
+            Assert.False(sut.Equals(new ApiVersion(1, 2)));
+            Assert.False(sut.Equals("1.2.3-alpha+build.5"));
+            Assert.False(sut.Equals(null));
+        }
+
+        [Fact]
+        public void GetHashCode_ShouldReturnCachedHashCode_WhenCalledMoreThanOnce()
+        {
+            var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build.5");
+
+            var hashCode = sut.GetHashCode();
+
+            Assert.Equal(hashCode, sut.GetHashCode());
+        }
+
+        [Fact]
+        public void CompareTo_ShouldReturnOne_WhenOtherVersionIsNull()
+        {
+            var sut = new SemanticApiVersion(1, 2, 3);
+
+            Assert.Equal(1, sut.CompareTo(null));
+        }
+
+        [Fact]
+        public void CompareTo_ShouldUseBaseComparison_WhenOtherVersionIsNotSemanticApiVersion()
+        {
+            var sut = new SemanticApiVersion(2, 0, 0);
+
+            Assert.True(sut.CompareTo(new ApiVersion(1, 0)) > 0);
+        }
+
+        [Theory]
+        [InlineData("1.2.3", "2.0.0")]
+        [InlineData("1.2.3", "1.3.0")]
+        [InlineData("1.2.3", "1.2.4")]
+        [InlineData("1.2.3-alpha", "1.2.3-alpha.1")]
+        [InlineData("1.2.3-alpha.beta", "1.2.3-beta")]
+        [InlineData("1.2.3-1", "1.2.3-alpha")]
+        public void CompareTo_ShouldApplySemanticVersionPrecedence(string lower, string higher)
+        {
+            var sut1 = SemanticApiVersionParser.Default.Parse(lower);
+            var sut2 = SemanticApiVersionParser.Default.Parse(higher);
+
+            Assert.True(sut1.CompareTo(sut2) < 0);
+            Assert.True(sut2.CompareTo(sut1) > 0);
+        }
+
         [Theory]
         [InlineData("1.2.3-alpha", "1.2.3")]
         [InlineData("1.2.3-alpha.1", "1.2.3-alpha.beta")]
+        [InlineData("1.2.3-alpha.1", "1.2.3-alpha.2")]
         [InlineData("1.2.3-alpha.2", "1.2.3-alpha.10")]
         [InlineData("1.2.3-alpha.99999999999999999999", "1.2.3-alpha.100000000000000000000")]
         public void CompareTo_ShouldApplySemanticVersionPrereleasePrecedence(string lower, string higher)
@@ -66,6 +120,8 @@ namespace Codebelt.Extensions.Asp.Versioning
         [InlineData("1.2.3-alpha.1", 1, 2, 3, "alpha.1", null)]
         [InlineData("1.2.3+build.01", 1, 2, 3, null, "build.01")]
         [InlineData("1.2.3-alpha.1+build.5", 1, 2, 3, "alpha.1", "build.5")]
+        [InlineData("1.2.3-ALPHA+BUILD", 1, 2, 3, "ALPHA", "BUILD")]
+        [InlineData("1.2.3-alpha-1+build-5", 1, 2, 3, "alpha-1", "build-5")]
         public void Parse_ShouldReturnSemanticApiVersion_WhenVersionIsValid(string version, int major, int minor, int patch, string prerelease, string buildMetadata)
         {
             var sut = Assert.IsType<SemanticApiVersion>(SemanticApiVersionParser.Default.Parse(version));
@@ -81,20 +137,38 @@ namespace Codebelt.Extensions.Asp.Versioning
         [InlineData("")]
         [InlineData("1")]
         [InlineData("1.2")]
+        [InlineData("1..3")]
+        [InlineData("1.2.")]
+        [InlineData("1.2.a")]
         [InlineData("1.2.3.4")]
         [InlineData("01.2.3")]
         [InlineData("1.02.3")]
         [InlineData("1.2.03")]
         [InlineData("1.2.3-")]
+        [InlineData("1.2.3-alpha.")]
+        [InlineData("1.2.3-alpha..1")]
         [InlineData("1.2.3-alpha.01")]
+        [InlineData("1.2.3-alpha_1")]
         [InlineData("1.2.3+")]
+        [InlineData("1.2.3+build.")]
+        [InlineData("1.2.3+build..1")]
         [InlineData("1.2.3+build_1")]
+        [InlineData("1.2.3+build+1")]
+        [InlineData("2147483648.2.3")]
         public void TryParse_ShouldReturnFalse_WhenVersionIsInvalid(string version)
         {
             var result = SemanticApiVersionParser.Default.TryParse(version.AsSpan(), out var apiVersion);
 
             Assert.False(result);
             Assert.Null(apiVersion);
+        }
+
+        [Fact]
+        public void Parse_ShouldThrowFormatException_WhenVersionIsInvalid()
+        {
+            var sut = Assert.Throws<FormatException>(() => SemanticApiVersionParser.Default.Parse("1.2"));
+
+            Assert.Equal("The specified API version is not a valid semantic version.", sut.Message);
         }
 
         [Theory]
@@ -122,20 +196,75 @@ namespace Codebelt.Extensions.Asp.Versioning
         [InlineData(null, "1.2.3-alpha+build.5")]
         [InlineData("G", "1.2.3-alpha+build.5")]
         [InlineData("F", "1.2.3-alpha+build.5")]
+        [InlineData("FF", "1.2.3-alpha+build.5")]
+        [InlineData("g", "1.2.3-alpha+build.5")]
         [InlineData("V", "1")]
+        [InlineData("M", "1")]
         [InlineData("v", "2")]
+        [InlineData("m", "2")]
         [InlineData("VV", "1.2")]
         [InlineData("VVV", "1")]
         [InlineData("VVVV", "1.2-alpha")]
         [InlineData("P", "3")]
         [InlineData("S", "alpha")]
+        [InlineData("R", "alpha")]
         [InlineData("B", "build.5")]
         [InlineData("VV'-'S'+'B", "1.2-alpha+build.5")]
+        [InlineData("VV\"-\"S\"+\"B", "1.2-alpha+build.5")]
+        [InlineData("V'.'v", "1.2")]
+        [InlineData("VVVV'+'B", "1.2-alpha+build.5")]
         public void ToString_ShouldReturnFormattedVersion_WhenFormatIsSupported(string format, string expected)
         {
             var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build.5");
 
             Assert.Equal(expected, sut.ToString(format));
+        }
+
+        [Theory]
+        [InlineData("S", "")]
+        [InlineData("B", "")]
+        [InlineData("G", "1.2.3")]
+        [InlineData("VVVV", "1.2")]
+        public void ToString_ShouldOmitOptionalParts_WhenSemanticVersionHasNoOptionalIdentifiers(string format, string expected)
+        {
+            var sut = new SemanticApiVersion(1, 2, 3);
+
+            Assert.Equal(expected, sut.ToString(format));
+        }
+
+        [Theory]
+        [InlineData("Q")]
+        [InlineData("VVVVV")]
+        [InlineData("VV'")]
+        public void ToString_ShouldThrowFormatException_WhenFormatIsUnsupported(string format)
+        {
+            var sut = new SemanticApiVersion(1, 2, 3);
+
+            Assert.Throws<FormatException>(() => sut.ToString(format));
+        }
+
+        [Fact]
+        public void SemanticApiVersionFormatter_ShouldReturnExpectedFormatProvider()
+        {
+            var sut = new SemanticApiVersionFormatter();
+            var provider = new SemanticApiVersionFormatterProvider(sut);
+
+            Assert.Same(sut, SemanticApiVersionFormatter.GetInstance(sut));
+            Assert.Same(sut, SemanticApiVersionFormatter.GetInstance(provider));
+            Assert.Same(sut, sut.GetFormat(typeof(ICustomFormatter)));
+            Assert.Same(sut, sut.GetFormat(typeof(SemanticApiVersionFormatter)));
+            Assert.Null(sut.GetFormat(null));
+            Assert.Null(sut.GetFormat(typeof(string)));
+        }
+
+        [Fact]
+        public void SemanticApiVersionFormatter_ShouldUseDefaultFormatting_WhenArgumentIsNotSemanticApiVersion()
+        {
+            var sut = new SemanticApiVersionFormatter();
+
+            Assert.Equal(string.Empty, sut.Format(null, null, null));
+            Assert.Equal("2A", sut.Format("X", 42, null));
+            Assert.Equal("text", sut.Format("ignored", "text", null));
         }
 
         [Fact]
@@ -149,6 +278,18 @@ namespace Codebelt.Extensions.Asp.Versioning
             Assert.True(result);
             Assert.Equal(19, charsWritten);
             Assert.Equal("1.2.3-alpha+build.5", destination[..charsWritten].ToString());
+        }
+
+        [Fact]
+        public void TryFormat_ShouldReturnFalse_WhenDestinationIsTooSmall()
+        {
+            Span<char> destination = stackalloc char[4];
+            var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build.5");
+
+            var result = sut.TryFormat(destination, out var charsWritten, "G", null);
+
+            Assert.False(result);
+            Assert.Equal(0, charsWritten);
         }
 
         [Theory]
@@ -172,9 +313,27 @@ namespace Codebelt.Extensions.Asp.Versioning
         }
 
         [Fact]
+        public void SemanticApiVersionAttribute_ShouldDefineSemanticApiVersionMetadata_WhenUsingVersionParts()
+        {
+            var sut = new SemanticApiVersionAttribute(1, 2, 3, "alpha", "build.5");
+            var version = Assert.IsType<SemanticApiVersion>(sut.Versions.Single());
+
+            Assert.Equal("1.2.3-alpha+build.5", version.ToString());
+        }
+
+        [Fact]
         public void MapToSemanticApiVersionAttribute_ShouldDefineSemanticApiVersionMetadata()
         {
             var sut = new MapToSemanticApiVersionAttribute(1, 2, 3, "alpha", "build.5");
+            var version = Assert.IsType<SemanticApiVersion>(sut.Versions.Single());
+
+            Assert.Equal("1.2.3-alpha+build.5", version.ToString());
+        }
+
+        [Fact]
+        public void MapToSemanticApiVersionAttribute_ShouldDefineSemanticApiVersionMetadata_WhenUsingString()
+        {
+            var sut = new MapToSemanticApiVersionAttribute("1.2.3-alpha+build.5");
             var version = Assert.IsType<SemanticApiVersion>(sut.Versions.Single());
 
             Assert.Equal("1.2.3-alpha+build.5", version.ToString());
@@ -267,6 +426,23 @@ namespace Codebelt.Extensions.Asp.Versioning
             }));
 
             Assert.Equal("setup", sut.ParamName);
+        }
+
+        private sealed class SemanticApiVersionFormatterProvider : IFormatProvider
+        {
+            private readonly SemanticApiVersionFormatter _formatter;
+
+            public SemanticApiVersionFormatterProvider(SemanticApiVersionFormatter formatter)
+            {
+                _formatter = formatter;
+            }
+
+            public object GetFormat(Type formatType)
+            {
+                return formatType == typeof(SemanticApiVersionFormatter)
+                    ? _formatter
+                    : null;
+            }
         }
     }
 }
