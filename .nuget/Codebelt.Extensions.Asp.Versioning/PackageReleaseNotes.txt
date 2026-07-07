@@ -1,3 +1,14 @@
+Version: 10.2.0
+Availability: .NET 10 and .NET 9
+
+# New Features
+- ADDED ApiVersionAliasParser to resolve friendly API version aliases before delegating to another parser, enabling callers to request versions by shortened or compatibility-oriented tokens,
+- ADDED AddApiVersionParser<T> extension method for registering custom IApiVersionParser implementations as the singleton parser for API versioning services.
+
+# Improvements
+- EXTENDED AddRestfulApiVersioning to automatically register semantic version aliases when the default API version is a SemanticApiVersion, enabling alias formats such as major, major.minor, and major.minor.patch without explicit configuration,
+- CHANGED Documentation updated to clarify semantic version alias registration behavior and guidance for exposing additional semantic versions.
+
 Version: 10.1.0
 Availability: .NET 10 and .NET 9
 
