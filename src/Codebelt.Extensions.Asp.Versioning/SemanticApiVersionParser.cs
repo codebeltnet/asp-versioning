@@ -93,13 +93,24 @@ public sealed class SemanticApiVersionParser : IApiVersionParser
         patch = default;
 
         var firstDot = text.IndexOf('.');
-        if (firstDot <= 0)
+        if (firstDot < 0)
+        {
+            return TryParseNumericIdentifier(text, out major);
+        }
+
+        if (firstDot == 0)
         {
             return false;
         }
 
         var secondDot = text[(firstDot + 1)..].IndexOf('.');
-        if (secondDot <= 0)
+        if (secondDot < 0)
+        {
+            return TryParseNumericIdentifier(text[..firstDot], out major)
+                && TryParseNumericIdentifier(text[(firstDot + 1)..], out minor);
+        }
+
+        if (secondDot == 0)
         {
             return false;
         }

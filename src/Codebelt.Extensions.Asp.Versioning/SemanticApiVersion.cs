@@ -119,6 +119,13 @@ public sealed class SemanticApiVersion : ApiVersion
             return _hashCode;
         }
 
+        if (IsCompatibleWithStandardApiVersion())
+        {
+            _hashCode = base.GetHashCode();
+            _hashCodeComputed = true;
+            return _hashCode;
+        }
+
         HashCode hash = default;
         hash.Add(MajorVersion.GetValueOrDefault());
         hash.Add(MinorVersion.GetValueOrDefault());
@@ -134,18 +141,26 @@ public sealed class SemanticApiVersion : ApiVersion
     /// <inheritdoc />
     public override bool Equals(object obj)
     {
-        return obj is SemanticApiVersion version && Equals(version);
+        return obj is ApiVersion version && Equals(version);
     }
 
     /// <inheritdoc />
     public override bool Equals(ApiVersion other)
     {
-        return other is SemanticApiVersion version
-            && MajorVersion == version.MajorVersion
-            && MinorVersion == version.MinorVersion
-            && PatchVersion == version.PatchVersion
-            && string.Equals(Prerelease, version.Prerelease, StringComparison.Ordinal)
-            && string.Equals(BuildMetadata, version.BuildMetadata, StringComparison.Ordinal);
+        if (other is SemanticApiVersion version)
+        {
+            return MajorVersion == version.MajorVersion
+                && MinorVersion == version.MinorVersion
+                && PatchVersion == version.PatchVersion
+                && string.Equals(Prerelease, version.Prerelease, StringComparison.Ordinal)
+                && string.Equals(BuildMetadata, version.BuildMetadata, StringComparison.Ordinal);
+        }
+
+        return other is not null
+            && IsCompatibleWithStandardApiVersion()
+            && MajorVersion == other.MajorVersion
+            && MinorVersion == other.MinorVersion
+            && string.IsNullOrEmpty(other.Status);
     }
 
     /// <inheritdoc />
@@ -291,6 +306,13 @@ public sealed class SemanticApiVersion : ApiVersion
         }
 
         return true;
+    }
+
+    private bool IsCompatibleWithStandardApiVersion()
+    {
+        return PatchVersion == 0
+            && string.IsNullOrEmpty(Prerelease)
+            && string.IsNullOrEmpty(BuildMetadata);
     }
 
     private static int ValidateNonNegative(int value, string paramName)
