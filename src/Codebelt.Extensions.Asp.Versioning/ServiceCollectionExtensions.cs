@@ -58,7 +58,33 @@ namespace Codebelt.Extensions.Asp.Versioning
                 });
             }
 
+            if (options.DefaultApiVersion is SemanticApiVersion semver)
+            {
+                services.AddApiVersionParser(ApiVersionAliasParser.CreateSemanticVersionAlias(semver));
+            }
+
             return services;
+        }
+
+        /// <summary>
+        /// Adds the specified API version parser as the singleton parser used by API versioning services.
+        /// </summary>
+        /// <typeparam name="T">The concrete <see cref="IApiVersionParser"/> type to register.</typeparam>
+        /// <param name="services">The <see cref="IServiceCollection"/> to extend.</param>
+        /// <param name="parser">The parser instance that should resolve API version values for the application.</param>
+        /// <returns>A reference to <paramref name="services" /> so that additional calls can be chained.</returns>
+        /// <remarks>
+        /// Register a custom parser when the application accepts version formats that differ from the default parser, such as semantic version aliases or compatibility tokens.
+        /// The supplied <paramref name="parser"/> is registered as the <see cref="IApiVersionParser"/> singleton.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="services"/> or <paramref name="parser"/> is <c>null</c>.
+        /// </exception>
+        public static IServiceCollection AddApiVersionParser<T>(this IServiceCollection services, T parser) where T : IApiVersionParser
+        {
+            Validator.ThrowIfNull(services);
+            Validator.ThrowIfNull(parser);
+            return services.AddSingleton<IApiVersionParser>(parser);
         }
     }
 }
