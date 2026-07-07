@@ -7,6 +7,20 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.2.0] - 2026-07-07
+
+This is a minor release adding API version aliasing support and automatic semantic version alias registration. Callers can now request versions by shortened or compatibility-oriented tokens (e.g., `1`, `1.0`, `1.0.0`), and applications using `SemanticApiVersion` as their default API version benefit from automatic alias registration without explicit configuration.
+
+### Added
+
+- `ApiVersionAliasParser` type for resolving friendly API version aliases before delegating to another `IApiVersionParser`, enabling callers to request versions by shortened or compatibility-oriented tokens,
+- `AddApiVersionParser<T>` extension method for registering custom `IApiVersionParser` implementations as the singleton parser used by API versioning services.
+
+### Changed
+
+- `AddRestfulApiVersioning` now automatically registers semantic version aliases when the default API version is a `SemanticApiVersion`, eliminating boilerplate configuration for common semantic versioning scenarios,
+- Documentation updated to clarify semantic version alias registration behavior and guidance for exposing additional semantic versions through custom parsers.
+
 ## [10.1.0] - 2026-07-03
 
 This is a minor release introducing Semantic Versioning support for APIs that require major.minor.patch versioning with pre-release and build metadata beyond standard Asp.Versioning.ApiVersion. The release also includes dependency service updates and enhanced CI/CD safety.
@@ -166,7 +180,8 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
-[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.1.0...HEAD
+[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.0...HEAD
+[10.2.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.1.0...v10.2.0
 [10.1.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.9...v10.1.0
 [10.0.9]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.8...v10.0.9
 [10.0.8]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.7...v10.0.8
