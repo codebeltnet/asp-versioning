@@ -1,4 +1,4 @@
 - name: Asp.Versioning API
-  href: api/Codebelt.Extensions.Asp.Versioning.html
+  href: api/Codebelt.Extensions.Asp.Versioning.yml
 - name: NuGet
-  href: packages
+  href: packages/index.md
