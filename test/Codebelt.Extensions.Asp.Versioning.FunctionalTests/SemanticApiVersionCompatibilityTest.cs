@@ -46,7 +46,7 @@ public class SemanticApiVersionCompatibilityTest : MinimalWebHostTest<ManagedWeb
             options.DefaultApiVersion = DefaultVersion;
             options.UseBuiltInRfc7807 = true;
         });
-        services.AddSingleton<IApiVersionParser>(new AliasApiVersionParser(new Dictionary<string, ApiVersion>(StringComparer.Ordinal)
+        services.AddSingleton<IApiVersionParser>(new ApiVersionAliasParser(new Dictionary<string, ApiVersion>(StringComparer.Ordinal)
         {
             ["1"] = DefaultVersion,
             ["1.0"] = DefaultVersion,
@@ -124,34 +124,5 @@ public class SemanticApiVersionCompatibilityTest : MinimalWebHostTest<ManagedWeb
         return headers.TryGetValues(headerName, out IEnumerable<string>? values)
             ? Assert.Single(values)
             : throw new InvalidOperationException($"Expected response header '{headerName}' was not found.");
-    }
-
-    private sealed class AliasApiVersionParser : IApiVersionParser
-    {
-        private readonly IReadOnlyDictionary<string, ApiVersion> _aliases;
-        private readonly IApiVersionParser _fallback;
-
-        public AliasApiVersionParser(IReadOnlyDictionary<string, ApiVersion> aliases, IApiVersionParser fallback)
-        {
-            _aliases = aliases;
-            _fallback = fallback;
-        }
-
-        public ApiVersion Parse(ReadOnlySpan<char> text)
-        {
-            return TryParse(text, out var apiVersion)
-                ? apiVersion
-                : throw new FormatException("The specified API version is not valid.");
-        }
-
-        public bool TryParse(ReadOnlySpan<char> text, out ApiVersion apiVersion)
-        {
-            if (_aliases.TryGetValue(text.ToString(), out apiVersion))
-            {
-                return true;
-            }
-
-            return _fallback.TryParse(text, out apiVersion);
-        }
     }
 }
