@@ -60,6 +60,26 @@ namespace Codebelt.Extensions.Asp.Versioning
         }
 
         [Fact]
+        public void Equals_ShouldReturnFalse_WhenComparingPatchZeroReleaseSemanticVersionToApiVersion()
+        {
+            var semantic = new SemanticApiVersion(1, 0, 0);
+            var standard = new ApiVersion(1, 0);
+
+            Assert.False(semantic.Equals(standard));
+            Assert.False(standard.Equals(semantic));
+        }
+
+        [Fact]
+        public void Equals_ShouldReturnFalse_WhenComparingNonZeroPatchSemanticVersionToApiVersion()
+        {
+            var semantic = new SemanticApiVersion(1, 2, 3);
+            var standard = new ApiVersion(1, 2);
+
+            Assert.False(semantic.Equals(standard));
+            Assert.False(standard.Equals(semantic));
+        }
+
+        [Fact]
         public void GetHashCode_ShouldReturnCachedHashCode_WhenCalledMoreThanOnce()
         {
             var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build.5");

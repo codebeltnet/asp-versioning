@@ -111,7 +111,7 @@ namespace Codebelt.Extensions.Asp.Versioning
         public IApiVersionConventionBuilder Conventions { get; set; }
 
         /// <summary>
-        /// Gets or sets the default API version applied to services that d	o not have explicit versions.
+        /// Gets or sets the default API version applied to services that do not have explicit versions.
         /// </summary>
         /// <value>The default API version applied to services that do not have explicit versions.</value>
         public ApiVersion DefaultApiVersion { get; set; }
