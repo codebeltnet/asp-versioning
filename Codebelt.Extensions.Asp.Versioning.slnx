@@ -4,5 +4,6 @@
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Codebelt.Extensions.Asp.Versioning.Tests/Codebelt.Extensions.Asp.Versioning.Tests.csproj" />
+    <Project Path="test/Codebelt.Extensions.Asp.Versioning.FunctionalTests/Codebelt.Extensions.Asp.Versioning.FunctionalTests.csproj" />
   </Folder>
 </Solution>
