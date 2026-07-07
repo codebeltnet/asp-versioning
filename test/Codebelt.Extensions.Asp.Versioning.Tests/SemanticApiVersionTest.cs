@@ -60,6 +60,27 @@ namespace Codebelt.Extensions.Asp.Versioning
         }
 
         [Fact]
+        public void Equals_ShouldTreatPatchZeroReleaseSemanticVersionAsEquivalentToApiVersion()
+        {
+            var semantic = new SemanticApiVersion(1, 0, 0);
+            var standard = new ApiVersion(1, 0);
+
+            Assert.True(semantic.Equals(standard));
+            Assert.True(standard.Equals(semantic));
+            Assert.Equal(standard.GetHashCode(), semantic.GetHashCode());
+        }
+
+        [Fact]
+        public void Equals_ShouldReturnFalse_WhenComparingNonZeroPatchSemanticVersionToApiVersion()
+        {
+            var semantic = new SemanticApiVersion(1, 2, 3);
+            var standard = new ApiVersion(1, 2);
+
+            Assert.False(semantic.Equals(standard));
+            Assert.False(standard.Equals(semantic));
+        }
+
+        [Fact]
         public void GetHashCode_ShouldReturnCachedHashCode_WhenCalledMoreThanOnce()
         {
             var sut = new SemanticApiVersion(1, 2, 3, "alpha", "build.5");
@@ -133,6 +154,8 @@ namespace Codebelt.Extensions.Asp.Versioning
         }
 
         [Theory]
+        [InlineData("1", 1, 0, 0, null, null)]
+        [InlineData("1.2", 1, 2, 0, null, null)]
         [InlineData("1.2.3", 1, 2, 3, null, null)]
         [InlineData("1.2.3-alpha.1", 1, 2, 3, "alpha.1", null)]
         [InlineData("1.2.3+build.01", 1, 2, 3, null, "build.01")]
@@ -152,8 +175,6 @@ namespace Codebelt.Extensions.Asp.Versioning
 
         [Theory]
         [InlineData("")]
-        [InlineData("1")]
-        [InlineData("1.2")]
         [InlineData("1..3")]
         [InlineData("1.2.")]
         [InlineData("1.2.a")]
@@ -183,7 +204,7 @@ namespace Codebelt.Extensions.Asp.Versioning
         [Fact]
         public void Parse_ShouldThrowFormatException_WhenVersionIsInvalid()
         {
-            var sut = Assert.Throws<FormatException>(() => SemanticApiVersionParser.Default.Parse("1.2"));
+            var sut = Assert.Throws<FormatException>(() => SemanticApiVersionParser.Default.Parse("1..2"));
 
             Assert.Equal("The specified API version is not a valid semantic version.", sut.Message);
         }
