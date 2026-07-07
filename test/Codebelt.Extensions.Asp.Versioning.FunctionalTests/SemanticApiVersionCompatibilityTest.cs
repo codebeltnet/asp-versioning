@@ -16,13 +16,13 @@ using Xunit;
 
 namespace Codebelt.Extensions.Asp.Versioning;
 
-public class SemanticApiVersionCompatibility : MinimalWebHostTest<ManagedWebMinimalHostFixture>
+public class SemanticApiVersionCompatibilityTest : MinimalWebHostTest<ManagedWebMinimalHostFixture>
 {
     private const string RequestedVersionHeaderName = "X-Requested-Version";
     private static readonly ApiVersion DefaultVersion = new(1, 0);
     private static readonly ApiVersion AlternateVersion = new(2, 0);
 
-    public SemanticApiVersionCompatibility(ManagedWebMinimalHostFixture hostFixture, ITestOutputHelper output) : base(hostFixture, output, typeof(SemanticApiVersionCompatibility))
+    public SemanticApiVersionCompatibilityTest(ManagedWebMinimalHostFixture hostFixture, ITestOutputHelper output) : base(hostFixture, output, typeof(SemanticApiVersionCompatibilityTest))
     {
     }
 
@@ -46,7 +46,15 @@ public class SemanticApiVersionCompatibility : MinimalWebHostTest<ManagedWebMini
             options.DefaultApiVersion = DefaultVersion;
             options.UseBuiltInRfc7807 = true;
         });
-        services.AddSingleton<IApiVersionParser>(SemanticApiVersionParser.Default);
+        services.AddSingleton<IApiVersionParser>(new AliasApiVersionParser(new Dictionary<string, ApiVersion>(StringComparer.Ordinal)
+        {
+            ["1"] = DefaultVersion,
+            ["1.0"] = DefaultVersion,
+            ["1.0.0"] = DefaultVersion,
+            ["2"] = AlternateVersion,
+            ["2.0"] = AlternateVersion,
+            ["2.0.0"] = AlternateVersion
+        }, ApiVersionParser.Default));
     }
 
     public override void ConfigureApplication(IApplicationBuilder app)
@@ -116,5 +124,34 @@ public class SemanticApiVersionCompatibility : MinimalWebHostTest<ManagedWebMini
         return headers.TryGetValues(headerName, out IEnumerable<string>? values)
             ? Assert.Single(values)
             : throw new InvalidOperationException($"Expected response header '{headerName}' was not found.");
+    }
+
+    private sealed class AliasApiVersionParser : IApiVersionParser
+    {
+        private readonly IReadOnlyDictionary<string, ApiVersion> _aliases;
+        private readonly IApiVersionParser _fallback;
+
+        public AliasApiVersionParser(IReadOnlyDictionary<string, ApiVersion> aliases, IApiVersionParser fallback)
+        {
+            _aliases = aliases;
+            _fallback = fallback;
+        }
+
+        public ApiVersion Parse(ReadOnlySpan<char> text)
+        {
+            return TryParse(text, out var apiVersion)
+                ? apiVersion
+                : throw new FormatException("The specified API version is not valid.");
+        }
+
+        public bool TryParse(ReadOnlySpan<char> text, out ApiVersion apiVersion)
+        {
+            if (_aliases.TryGetValue(text.ToString(), out apiVersion))
+            {
+                return true;
+            }
+
+            return _fallback.TryParse(text, out apiVersion);
+        }
     }
 }

@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Codebelt.Extensions.Asp.Versioning;
 
-public class SemanticApiVersionNonProduction : MinimalWebHostTest<ManagedWebMinimalHostFixture>
+public class SemanticApiVersionNonProductionTest : MinimalWebHostTest<ManagedWebMinimalHostFixture>
 {
     private const string SemanticVersionHeaderName = "X-Semantic-Version";
     private const string HttpMethodHeaderName = "X-Http-Method";
@@ -34,7 +34,7 @@ public class SemanticApiVersionNonProduction : MinimalWebHostTest<ManagedWebMini
         HttpMethods.Delete
     ];
 
-    public SemanticApiVersionNonProduction(ManagedWebMinimalHostFixture hostFixture, ITestOutputHelper output) : base(hostFixture, output, typeof(SemanticApiVersionProduction))
+    public SemanticApiVersionNonProductionTest(ManagedWebMinimalHostFixture hostFixture, ITestOutputHelper output) : base(hostFixture, output, typeof(SemanticApiVersionNonProductionTest))
     {
     }
 
