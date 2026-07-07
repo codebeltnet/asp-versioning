@@ -22,7 +22,7 @@ public class SemanticApiVersionDefaultCompatibilityTest : MinimalWebHostTest<Man
     private static readonly SemanticApiVersion DefaultVersion = new(1, 0, 0);
     private static readonly SemanticApiVersion AlternateVersion = new(2, 0, 0);
 
-    public SemanticApiVersionDefaultCompatibilityTest(ManagedWebMinimalHostFixture hostFixture, ITestOutputHelper output) : base(hostFixture, output, typeof(SemanticApiVersionCompatibilityTest))
+    public SemanticApiVersionDefaultCompatibilityTest(ManagedWebMinimalHostFixture hostFixture, ITestOutputHelper output) : base(hostFixture, output, typeof(SemanticApiVersionDefaultCompatibilityTest))
     {
     }
 

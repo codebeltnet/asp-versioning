@@ -17,7 +17,10 @@ namespace Codebelt.Extensions.Asp.Versioning
         /// <param name="services">The <see cref="IServiceCollection"/> to extend.</param>
         /// <param name="setup">The <see cref="RestfulApiVersioningOptions"/> that may be configured.</param>
         /// <returns>A reference to <paramref name="services" /> so that additional calls can be chained.</returns>
-        /// <remarks>This is a convenient method to add API versioning to your ASP.NET Core WebApi. Call <c>AddApiVersioning</c>, <c>AddMvc</c> and <c>AddApiExplorer</c>. Configuration, which is optimized for RESTful APIs, are done through <paramref name="setup"/>.</remarks>
+        /// <remarks>
+        /// This is a convenient method to add API versioning to your ASP.NET Core WebApi. Call <c>AddApiVersioning</c>, <c>AddMvc</c> and <c>AddApiExplorer</c>. Configuration, which is optimized for RESTful APIs, are done through <paramref name="setup"/>.
+        /// When <see cref="RestfulApiVersioningOptions.DefaultApiVersion"/> is a <see cref="SemanticApiVersion"/>, semantic aliases are automatically registered only for that default version. Applications that expose additional semantic versions and need aliases such as <c>2</c> or <c>2.0</c> should call <see cref="AddApiVersionParser{T}(IServiceCollection, T)"/> with <see cref="ApiVersionAliasParser.CreateSemanticVersionAlias(System.Collections.Generic.IEnumerable{SemanticApiVersion})"/>.
+        /// </remarks>
         public static IServiceCollection AddRestfulApiVersioning(this IServiceCollection services, Action<RestfulApiVersioningOptions> setup = null)
         {
             Validator.ThrowIfNull(services);

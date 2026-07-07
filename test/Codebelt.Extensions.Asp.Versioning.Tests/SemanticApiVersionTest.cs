@@ -203,7 +203,7 @@ namespace Codebelt.Extensions.Asp.Versioning
         [Fact]
         public void Parse_ShouldThrowFormatException_WhenVersionIsInvalid()
         {
-            var sut = Assert.Throws<FormatException>(() => SemanticApiVersionParser.Default.Parse("1..2"));
+            var sut = Assert.Throws<FormatException>(() => SemanticApiVersionParser.Default.Parse("1.2"));
 
             Assert.Equal("The specified API version is not a valid semantic version.", sut.Message);
         }
