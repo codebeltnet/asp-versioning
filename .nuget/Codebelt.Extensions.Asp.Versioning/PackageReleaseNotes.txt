@@ -1,3 +1,13 @@
+Version: 10.2.1
+Availability: .NET 10 and .NET 9
+
+# Improvements
+- CHANGED RestfulApiVersioningOptions to include ApiVersionReader property for advanced version reader customization,
+- CHANGED Automatic version normalization is enabled by default when the default API version is a SemanticApiVersion; otherwise it retains its previous behavior.
+
+# Bug Fixes
+- FIXED RestfulApiVersionReader to normalize semantically equivalent API version formats (1, 1.0, 1.0.0) to identical values for consistent routing and version matching,
+
 Version: 10.2.0
 Availability: .NET 10 and .NET 9
 

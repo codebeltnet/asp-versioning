@@ -97,6 +97,25 @@ public class SemanticApiVersionCompatibilityTest : MinimalWebHostTest<ManagedWeb
         Assert.Equal(expectedVersion.ToString(), GetHeader(response.Headers, RequestedVersionHeaderName));
     }
 
+    [Fact]
+    public async Task PostRequest_ShouldFailWhenPlainApiVersionUsesDifferentAliasTextAcrossAcceptAndContentType()
+    {
+        using var client = Host.GetTestClient();
+        using var response = await client.SendAsync(CreateRequest("1", "1.0.0"));
+
+        var payload = await response.Content.ReadAsStringAsync();
+
+        TestOutput.WriteLine("Accept v=1; Content-Type v=1.0.0");
+        TestOutput.WriteLine($"{(int)response.StatusCode} {response.StatusCode}");
+        if (!string.IsNullOrWhiteSpace(payload))
+        {
+            TestOutput.WriteLine(payload);
+        }
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.False(response.Headers.Contains(RequestedVersionHeaderName));
+    }
+
     private static IResult WriteResponse(HttpContext context, ApiVersion version)
     {
         context.Response.Headers[RequestedVersionHeaderName] = version.ToString();
@@ -105,15 +124,20 @@ public class SemanticApiVersionCompatibilityTest : MinimalWebHostTest<ManagedWeb
 
     private static HttpRequestMessage CreateRequest(string? version)
     {
+        return CreateRequest(version, version);
+    }
+
+    private static HttpRequestMessage CreateRequest(string? acceptVersion, string? contentTypeVersion)
+    {
         var request = new HttpRequestMessage(HttpMethod.Post, "/requests")
         {
             Content = new StringContent("""{"payload":"request"}""", Encoding.UTF8, "application/json")
         };
 
-        request.Headers.Add("Accept", version is null ? "application/json" : $"application/json;v={version}");
-        if (version is not null)
+        request.Headers.Add("Accept", acceptVersion is null ? "application/json" : $"application/json;v={acceptVersion}");
+        if (contentTypeVersion is not null)
         {
-            request.Content.Headers.ContentType?.Parameters.Add(new NameValueHeaderValue("v", version));
+            request.Content.Headers.ContentType?.Parameters.Add(new NameValueHeaderValue("v", contentTypeVersion));
         }
 
         return request;
