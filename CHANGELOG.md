@@ -7,6 +7,19 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.2.1] - 2026-07-09
+
+This is a minor release focused on normalizing semantically equivalent API version formats to ensure consistent routing and version matching. Version strings like 1, 1.0, and 1.0.0 are now normalized to identical canonical forms, with automatic enabling when using `SemanticApiVersion` as the default API version.
+
+### Changed
+
+- `RestfulApiVersioningOptions` includes a new `ApiVersionReader` property for advanced version reader customization,
+- Automatic version normalization is enabled by default when the default API version is a `SemanticApiVersion`, with a `PreviousBehavior` compatibility flag available for opting out of the normalization.
+
+### Fixed
+
+- `RestfulApiVersionReader` now normalizes semantically equivalent API version formats (1, 1.0, 1.0.0) to identical values for consistent routing and version matching.
+
 ## [10.2.0] - 2026-07-07
 
 This is a minor release adding API version aliasing support and automatic semantic version alias registration. Callers can now request versions by shortened or compatibility-oriented tokens (e.g., `1`, `1.0`, `1.0.0`), and applications using `SemanticApiVersion` as their default API version benefit from automatic alias registration without explicit configuration.
@@ -180,7 +193,8 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
-[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.0...HEAD
+[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.1...HEAD
+[10.2.1]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.0...v10.2.1
 [10.2.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.1.0...v10.2.0
 [10.1.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.9...v10.1.0
 [10.0.9]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.8...v10.0.9
