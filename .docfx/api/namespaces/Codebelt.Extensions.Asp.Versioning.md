@@ -20,3 +20,6 @@ Complements: [Asp.Versioning](https://github.com/dotnet/aspnet-api-versioning) t
 |--:|:-:|---|
 |`IApplicationBuilder`|⬇️|`UseRestfulApiVersioning`|
 |`IServiceCollection`|⬇️|`AddRestfulApiVersioning`|
+|`IServiceCollection`|⬇️|`AddApiVersionParser<T>`|
+
+Use `AddApiVersionParser` to register a custom `IApiVersionParser` — for example, an `ApiVersionAliasParser` built with `CreateSemanticVersionAlias` that maps short version tokens to canonical `SemanticApiVersion` instances.
