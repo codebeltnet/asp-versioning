@@ -51,6 +51,10 @@ namespace Codebelt.Extensions.Asp.Versioning
         ///         <term><see cref="ValidAcceptHeaders"/></term>
         ///         <description><c>application/json, application/xml, application/yaml, application/vnd, text/json, text/xml, text/plain, text/yaml, */*</c></description>
         ///     </item>
+        ///     <item>
+        ///         <term><see cref="ApiVersionReader"/></term>
+        ///         <description><c>null</c></description>
+        ///     </item>
         /// </list>
         /// </remarks>
         public RestfulApiVersioningOptions()
@@ -96,6 +100,12 @@ namespace Codebelt.Extensions.Asp.Versioning
             ApiVersionSelectorType = typeof(T);
             return this;
         }
+
+        /// <summary>
+        /// Gets or sets the API version reader used to read the API version from the request.
+        /// </summary>
+        /// <value>The API version reader used to read the API version from the request.</value>
+        public MediaTypeApiVersionReader ApiVersionReader { get; set; }
 
         /// <summary>
         /// Gets the concrete implementation type of a type that implements the <see cref="IApiVersionSelector"/> interface.

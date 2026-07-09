@@ -26,12 +26,18 @@ namespace Codebelt.Extensions.Asp.Versioning
             Validator.ThrowIfNull(services);
             Validator.ThrowIfInvalidConfigurator(setup, out var options);
 
+            var defaultSemanticApiVersion = options.DefaultApiVersion as SemanticApiVersion;
+            var preferSemVerBehavior = defaultSemanticApiVersion != null;
+
             services.AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = options.DefaultApiVersion;
                 o.ReportApiVersions = options.ReportApiVersions;
                 o.AssumeDefaultVersionWhenUnspecified = true;
-                o.ApiVersionReader = new RestfulApiVersionReader(options.ValidAcceptHeaders, options.ParameterName);
+                o.ApiVersionReader = options.ApiVersionReader ?? new RestfulApiVersionReader(options.ValidAcceptHeaders, options.ParameterName)
+                {
+                    PreviousBehavior = !preferSemVerBehavior
+                };
                 o.ApiVersionSelector = (Activator.CreateInstance(options.ApiVersionSelectorType, o) as IApiVersionSelector)!;
             }).AddMvc(o =>
             {
@@ -61,9 +67,9 @@ namespace Codebelt.Extensions.Asp.Versioning
                 });
             }
 
-            if (options.DefaultApiVersion is SemanticApiVersion semver)
+            if (defaultSemanticApiVersion != null)
             {
-                services.AddApiVersionParser(ApiVersionAliasParser.CreateSemanticVersionAlias(semver));
+                services.AddApiVersionParser(ApiVersionAliasParser.CreateSemanticVersionAlias(defaultSemanticApiVersion));
             }
 
             return services;
