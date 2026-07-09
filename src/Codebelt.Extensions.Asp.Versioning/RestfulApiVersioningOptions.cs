@@ -105,7 +105,7 @@ namespace Codebelt.Extensions.Asp.Versioning
         /// Gets or sets the API version reader used to read the API version from the request.
         /// </summary>
         /// <value>The API version reader used to read the API version from the request.</value>
-        public MediaTypeApiVersionReader ApiVersionReader { get; set; }
+        public IApiVersionReader ApiVersionReader { get; set; }
 
         /// <summary>
         /// Gets the concrete implementation type of a type that implements the <see cref="IApiVersionSelector"/> interface.

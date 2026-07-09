@@ -14,7 +14,7 @@ This is a minor release focused on normalizing semantically equivalent API versi
 ### Changed
 
 - `RestfulApiVersioningOptions` includes a new `ApiVersionReader` property for advanced version reader customization,
-- Automatic version normalization is enabled by default when the default API version is a `SemanticApiVersion`, with a `PreviousBehavior` compatibility flag available for opting out of the normalization.
+- Automatic version normalization is enabled by default when the default API version is a `SemanticApiVersion`; otherwise it retains its previous behavior.
 
 ### Fixed
 
