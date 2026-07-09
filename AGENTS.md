@@ -23,9 +23,9 @@ Codebelt.Extensions.Asp.Versioning is a .NET library providing uniform, opiniona
 
 - `src/` — Production source code
   - `Codebelt.Extensions.Asp.Versioning/` — Core API versioning library with middleware, options, and parsers
-  - `Codebelt.Extensions.Asp.Versioning.FunctionalTests/` — End-to-end functional tests for integration scenarios
 - `test/` — Unit tests (project names end with `Tests`)
   - `Codebelt.Extensions.Asp.Versioning.Tests/` — Unit tests for core functionality
+  - `Codebelt.Extensions.Asp.Versioning.FunctionalTests/` — End-to-end functional tests for integration scenarios
 - `.nuget/` — Per-package NuGet metadata (icon, README, release notes)
 - `.docfx/` — DocFX documentation configuration
 - `.github/` — CI/CD workflows, contributing guidelines, Copilot instructions
