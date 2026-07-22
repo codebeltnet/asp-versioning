@@ -7,6 +7,10 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.2.2] - 2026-07-22
+
+This is a service update that focuses on package dependencies.
+
 ## [10.2.1] - 2026-07-09
 
 This is a minor release focused on normalizing semantically equivalent API version formats to ensure consistent routing and version matching. Version strings like 1, 1.0, and 1.0.0 are now normalized to identical canonical forms, with automatic enabling when using `SemanticApiVersion` as the default API version.
