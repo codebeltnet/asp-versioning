@@ -73,8 +73,7 @@ namespace Codebelt.Extensions.Asp.Versioning
         /// <summary>
         /// Reads the requested API version from the HTTP Accept header.
         /// </summary>
-        /// <param name="accept">The <see cref="T:System.Collections.Generic.ICollection`1">collection</see> of Accept
-        /// <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue">headers</see> to read from.</param>
+        /// <param name="accept">The <see cref="ICollection{MediaTypeHeaderValue}"/> of Accept headers to read from.</param>
         /// <returns>The API version read or <c>null</c>.</returns>
         /// <remarks>This implementation will, when <see cref="ValidAcceptHeaders"/> has values, filter <paramref name="accept"/> to only include valid <see cref="HeaderNames.Accept"/> headers.</remarks>
         protected override string ReadAcceptHeader(ICollection<MediaTypeHeaderValue> accept)
