@@ -7,6 +7,21 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.2.2] - 2026-07-24
+
+This is a patch release focused on dependency updates, build toolchain improvements, and documentation quality. The release upgrades core development dependencies to their latest stable patches, enables recommended .NET code analyzers with code style enforcement, configures consistent git tag naming, and refines XML documentation.
+
+### Changed
+
+- Dependencies upgraded to latest stable patches for all supported target frameworks: Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json (10.1.5 → 10.1.6), Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml (10.1.5 → 10.1.6), Codebelt.Extensions.Xunit.App (11.1.1 → 11.1.2), Cuemon.AspNetCore and related packages (10.5.4 → 10.5.5), and Microsoft.NET.Test.Sdk (18.7.0 → 18.8.1),
+- Build configuration now enables recommended .NET code analyzers with latest analysis level and enforces code style compliance during build,
+- DocFX Dockerfile base image updated from nginx 1.31.2-alpine to nginx 1.31-alpine,
+- MinVerTagPrefix configured to `v` for consistent semantic version tag naming.
+
+### Fixed
+
+- XML documentation improved in `RestfulApiVersionReader` with simplified and modernized parameter documentation using modern type references.
+
 ## [10.2.1] - 2026-07-09
 
 This is a minor release focused on normalizing semantically equivalent API version formats to ensure consistent routing and version matching. Version strings like 1, 1.0, and 1.0.0 are now normalized to identical canonical forms, with automatic enabling when using `SemanticApiVersion` as the default API version.
@@ -193,7 +208,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
-[Unreleased]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.1...HEAD
+[10.2.2]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.1...v10.2.2
 [10.2.1]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.0...v10.2.1
 [10.2.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.1.0...v10.2.0
 [10.1.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.0.9...v10.1.0
