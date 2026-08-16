@@ -9,7 +9,18 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 
 ## [10.2.3] - 2026-08-16
 
-This is a service update that focuses on package dependencies.
+This is a patch release focused on package dependencies, development infrastructure improvements, and project-level configuration standardization. The release upgrades core dependencies to their latest compatible versions, introduces project-level code style enforcement and Git behavior configuration, and consolidates Docker test environments for simplified multi-framework testing.
+
+### Added
+
+- `.editorconfig` for project-level code style enforcement with UTF-8 encoding, indentation rules, and analyzer suppressions,
+- `.gitattributes` for Git behavior configuration with line ending normalization and merge strategy standardization.
+
+### Changed
+
+- Dependencies upgraded to latest compatible versions: Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json (10.1.6 → 10.1.7), Codebelt.Extensions.Xunit.App (11.1.2 → 11.2.1), Cuemon.AspNetCore and related packages (10.5.5 → 10.7.0), and Microsoft.NET.Test.Sdk (18.8.1 → 18.9.0),
+- Asp.Versioning packages for .NET 10 targets upgraded from 10.0.0 to 10.2.x series: Abstractions and Mvc to 10.2.1, Http to 10.2.2, and Mvc.ApiExplorer to 10.2.1,
+- Docker test environments consolidated from separate net9 and net10 images to single multi-version `codebeltnet/ubuntu-testrunner:8-9-10-11` image for simplified test infrastructure.
 
 ## [10.2.2] - 2026-07-24
 
@@ -212,6 +223,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
+[10.2.3]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.2...v10.2.3
 [10.2.2]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.1...v10.2.2
 [10.2.1]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.0...v10.2.1
 [10.2.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.1.0...v10.2.0
