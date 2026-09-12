@@ -7,6 +7,10 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.2.4] - 2026-09-12
+
+This is a service update that focuses on package dependencies.
+
 ## [10.2.3] - 2026-08-16
 
 This is a patch release focused on package dependencies, development infrastructure improvements, and project-level configuration standardization. The release upgrades core dependencies to their latest compatible versions, introduces project-level code style enforcement and Git behavior configuration, and consolidates Docker test environments for simplified multi-framework testing.
