@@ -7,6 +7,26 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.2.4] - 2026-09-12
+
+This is a patch release focused on test infrastructure modernization, dependency updates, and development tooling improvements. The release upgrades xUnit to v4, migrates test coverage from coverlet to Microsoft.Testing.Extensions.CodeCoverage, introduces Microsoft.Testing.Platform configuration, and updates development dependencies to their latest stable versions.
+
+### Added
+
+- `global.json` with Microsoft.Testing.Platform configuration for unified test execution,
+- Microsoft.Testing.Extensions.CodeCoverage package for improved code coverage reporting in test projects.
+
+### Changed
+
+- Test runner upgraded to xUnit v4 with all related runners: xunit.v3, xunit.v3.runner.console, and xunit.runner.visualstudio all updated from v3 series to 4.0.0,
+- Test tooling migration from coverlet (coverlet.collector, coverlet.msbuild) to Microsoft.Testing.Extensions.CodeCoverage for modern coverage integration,
+- Dependencies upgraded to latest stable versions: Codebelt.Extensions.Xunit.App (11.2.1 → 12.0.1), Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json (10.1.7 → 10.1.8), Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml (10.1.6 → 10.1.8), Cuemon packages (10.7.0 → 10.7.1), Microsoft.NET.Test.Sdk (18.9.0 → 18.10.0), MinVer (7.0.0 → 8.0.0), and Asp.Versioning.Http (10.2.2 → 10.2.3),
+- Documentation updated in CONTRIBUTING.md with improved contributor onboarding and repository structure guidance.
+
+### Removed
+
+- Removed `coverlet.collector` and `coverlet.msbuild` from test project dependencies.
+
 ## [10.2.3] - 2026-08-16
 
 This is a patch release focused on package dependencies, development infrastructure improvements, and project-level configuration standardization. The release upgrades core dependencies to their latest compatible versions, introduces project-level code style enforcement and Git behavior configuration, and consolidates Docker test environments for simplified multi-framework testing.
@@ -223,6 +243,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
+[10.2.4]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.3...v10.2.4
 [10.2.3]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.2...v10.2.3
 [10.2.2]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.1...v10.2.2
 [10.2.1]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.0...v10.2.1
