@@ -10,12 +10,13 @@
     <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc" Version="10.8.1" />
     <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json" Version="10.8.1" />
     <PackageVersion Include="Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml" Version="10.8.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.2" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageVersion Include="Codebelt.Coverlet.MTP" Version="10.1.0" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.HangDump" Version="2.5.1" />
     <PackageVersion Include="MinVer" Version="8.0.0" />
-    <PackageVersion Include="xunit.v3" Version="4.0.1" />
-    <PackageVersion Include="xunit.v3.runner.console" Version="4.0.1" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0" />
+    <PackageVersion Include="xunit.v3" Version="4.0.2" />
+    <PackageVersion Include="xunit.v3.runner.console" Version="4.0.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
     <PackageVersion Include="Asp.Versioning.Abstractions" Version="8.1.0" />
