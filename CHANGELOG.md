@@ -7,6 +7,10 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.2.5] - 2026-10-17
+
+This is a service update that focuses on package dependencies.
+
 ## [10.2.4] - 2026-09-12
 
 This is a patch release focused on test infrastructure modernization, dependency updates, and development tooling improvements. The release upgrades xUnit to v4, migrates test coverage from coverlet to Microsoft.Testing.Extensions.CodeCoverage, introduces Microsoft.Testing.Platform configuration, and updates development dependencies to their latest stable versions.
