@@ -10,6 +10,7 @@
         }
       ],
       "dest": "api",
+      "memberLayout": "separatePages",
       "filter": "filterConfig.yml",
       "properties": {
         "TargetFramework": "net10.0"
@@ -17,6 +18,9 @@
     }
   ],
   "build": {
+    "sitemap": {
+      "changefreq": "monthly",
+      "baseUrl": "https://asp-versioning.codebelt.net/"},
     "xref": [
       "https://docs.cuemon.net/xrefmap.yml",
       "https://github.com/dotnet/docfx/raw/main/.xrefmap.json"
@@ -63,7 +67,8 @@
     "fileMetadataFiles": [],
     "template": [
       "default",
-      "modern"
+      "modern",
+      "templates/ms-style"
     ],
     "overwrite": [
       {
