@@ -7,6 +7,35 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [10.2.5] - 2026-10-17
+
+This is a patch release updating dependencies, documentation hosting, and repository agent guidance.
+
+### Added
+
+- Added "Codebelt.Coverlet.MTP" 10.1.0 for MTP coverage and "Microsoft.Testing.Extensions.HangDump" 2.5.1 for hang diagnostics,
+- Added an nginx configuration serving documentation on port 8080, caching fingerprinted assets, and disabling caching for stable URLs.
+
+### Changed
+
+- Updated "Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json" from 10.1.8 to 10.1.9,
+- Updated "Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml" from 10.1.8 to 10.1.9,
+- Updated "Codebelt.Extensions.Xunit.App" from 12.0.1 to 12.0.2,
+- Updated "Cuemon.AspNetCore" from 10.7.1 to 10.8.1,
+- Updated "Cuemon.Extensions.AspNetCore.Mvc" from 10.7.1 to 10.8.1,
+- Updated "Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json" from 10.7.1 to 10.8.1,
+- Updated "Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml" from 10.7.1 to 10.8.1,
+- Updated "Microsoft.NET.Test.Sdk" from 18.10.0 to 18.11.0,
+- Updated "xunit.v3" from 4.0.1 to 4.0.2,
+- Updated "xunit.v3.runner.console" from 4.0.1 to 4.0.2,
+- Updated "xunit.runner.visualstudio" from 4.0.0 to 4.0.1,
+- Updated the DocFX container to use dhi.io/nginx and codebeltnet/docfx:2, with separate API member pages, the ms-style template, and a repository-specific sitemap,
+- Consolidated the full test, benchmark, and XML documentation guidance from .github/copilot-instructions.md into AGENTS.md with explicit path scopes, and updated guidance references.
+
+### Removed
+
+- Removed the direct "Microsoft.Testing.Extensions.CodeCoverage" test dependency in favor of "Codebelt.Coverlet.MTP".
+
 ## [10.2.4] - 2026-09-12
 
 This is a patch release focused on test infrastructure modernization, dependency updates, and development tooling improvements. The release upgrades xUnit to v4, migrates test coverage from coverlet to Microsoft.Testing.Extensions.CodeCoverage, introduces Microsoft.Testing.Platform configuration, and updates development dependencies to their latest stable versions.
@@ -243,6 +272,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
+[10.2.5]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.4...v10.2.5
 [10.2.4]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.3...v10.2.4
 [10.2.3]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.2...v10.2.3
 [10.2.2]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.1...v10.2.2
