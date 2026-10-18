@@ -20,7 +20,7 @@
   "build": {
     "sitemap": {
       "changefreq": "monthly",
-      "baseUrl": "https://asp-versioning.codebelt.net/"},
+      "baseUrl": "https://versioning.codebelt.net/"},
     "xref": [
       "https://docs.cuemon.net/xrefmap.yml",
       "https://github.com/dotnet/docfx/raw/main/.xrefmap.json"
