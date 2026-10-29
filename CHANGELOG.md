@@ -7,6 +7,18 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]  
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
+## [11.0.0] - 2026-11-10
+
+This is a major release moving the supported baseline to .NET 11 and .NET 10. .NET 9 consumers must remain on the 10.x package line or upgrade their application framework; .NET 11 is currently in RC2.
+
+### Changed
+
+- Replaced the .NET 9 target with .NET 11 for the library and both test projects, retaining .NET 10 and the compatible stable Asp.Versioning 10.x and Cuemon 10.8.1 dependencies,
+- Enabled prerelease SDK provisioning for build, pack, tests, SonarCloud, and CodeQL using the existing reusable-workflow contracts,
+- Updated "Codebelt.Coverlet.MTP" from 10.1.0 to 10.1.1 and explicitly configured production assembly coverage to prevent inferred exclusions from producing empty reports,
+- Updated the YAML error response test to expect the ASP.NET Core 11 generated stack-frame name while retaining the complete response assertion,
+- Aligned current framework availability, package documentation, contributing guidance, and the service-update availability fallback with .NET 11 and .NET 10.
+
 ## [10.2.5] - 2026-10-17
 
 This is a patch release updating dependencies, documentation hosting, and repository agent guidance.
@@ -272,6 +284,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
+[11.0.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.5...HEAD
 [10.2.5]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.4...v10.2.5
 [10.2.4]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.3...v10.2.4
 [10.2.3]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.2...v10.2.3
