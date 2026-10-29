@@ -4,8 +4,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 For more details, please refer to `PackageReleaseNotes.txt` on a per assembly basis in the `.nuget` folder.
 
-> [!NOTE]  
+> [!NOTE]
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
+
+## [11.0.0] - 2026-11-10
+
+This is a major release moving the supported baseline to .NET 11 and .NET 10. .NET 9 consumers must remain on the 10.x package line or upgrade their application framework.
+
+### Added
+
+- Added SonarAnalyzer.CSharp 10.35.0.4138 as a private production build dependency.
+
+### Changed
+
+- Replaced the .NET 9 target with .NET 11 for the library and both test projects, retaining .NET 10 and the compatible stable Asp.Versioning 10.x and Cuemon 10.8.2 dependencies,
+- Enabled prerelease SDK provisioning for build, pack, tests, SonarCloud, and CodeQL using the existing reusable-workflow contracts,
+- Updated Codebelt.Coverlet.MTP from 10.1.0 to 10.1.1, Microsoft.Testing.Extensions.HangDump from 2.5.1 to 2.5.2, and Cuemon.AspNetCore, Cuemon.Extensions.AspNetCore.Mvc, Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json, and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml from 10.8.1 to 10.8.2,
+- Updated the YAML error response test to expect the ASP.NET Core 11 generated stack-frame name while retaining the complete response assertion,
+- Applied file-scoped namespaces and required namespace diagnostics, refreshed Sonar rule links, and normalized tracked text to LF without a UTF-8 BOM,
+- Configured Docker test environments for .NET 10 and .NET 11 and refreshed contributor instructions,
+- Updated DocFX sitemap hosting and nginx configuration,
+- Aligned current framework availability, package documentation, contributing guidance, and the service-update availability fallback with .NET 11 and .NET 10.
 
 ## [10.2.5] - 2026-10-17
 
@@ -272,6 +291,7 @@ This major release is first and foremost focused on ironing out any wrinkles tha
 - RestfulApiVersionReader class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful API version reader that reads the value from a filtered list of HTTP Accept headers in the request
 - RestfulProblemDetailsFactory class in the Codebelt.Extensions.Asp.Versioning namespace that represents a RESTful implementation of the IProblemDetailsFactory which throws variants of HttpStatusCodeException that needs to be translated accordingly
 
+[11.0.0]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.5...v11.0.0
 [10.2.5]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.4...v10.2.5
 [10.2.4]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.3...v10.2.4
 [10.2.3]: https://github.com/codebeltnet/asp-versioning/compare/v10.2.2...v10.2.3

@@ -1,98 +1,97 @@
-﻿using System;
+using System;
 using Asp.Versioning;
 using Codebelt.Extensions.Xunit;
 using Cuemon;
 using Xunit;
 
-namespace Codebelt.Extensions.Asp.Versioning
+namespace Codebelt.Extensions.Asp.Versioning;
+
+public class RestfulApiVersioningOptionsTest : Test
 {
-    public class RestfulApiVersioningOptionsTest : Test
+    public RestfulApiVersioningOptionsTest(ITestOutputHelper output) : base(output)
     {
-        public RestfulApiVersioningOptionsTest(ITestOutputHelper output) : base(output)
+    }
+
+    [Fact]
+    public void RestfulApiVersioningOptions_ParameterNameIsWithWhitespaceOnly_ShouldThrowInvalidOperationException()
+    {
+        var sut1 = new RestfulApiVersioningOptions
         {
-        }
+            ParameterName = " "
+        };
+        var sut2 = Assert.Throws<InvalidOperationException>(() => sut1.ValidateOptions());
+        var sut3 = Assert.Throws<ArgumentException>(() => Validator.ThrowIfInvalidOptions(sut1));
 
-        [Fact]
-        public void RestfulApiVersioningOptions_ParameterNameIsWithWhitespaceOnly_ShouldThrowInvalidOperationException()
+        Assert.Equal("Operation is not valid due to the current state of the object. (Expression 'Condition.IsNull(ParameterName) || Condition.IsEmpty(ParameterName) || Condition.IsWhiteSpace(ParameterName)')", sut2.Message);
+        Assert.Equal("RestfulApiVersioningOptions are not in a valid state. (Parameter 'sut1')", sut3.Message);
+        Assert.IsType<InvalidOperationException>(sut3.InnerException);
+    }
+
+    [Fact]
+    public void RestfulApiVersioningOptions_ParameterNameIsEmpty_ShouldThrowInvalidOperationException()
+    {
+        var sut1 = new RestfulApiVersioningOptions
         {
-            var sut1 = new RestfulApiVersioningOptions
-            {
-                ParameterName = " "
-            };
-            var sut2 = Assert.Throws<InvalidOperationException>(() => sut1.ValidateOptions());
-            var sut3 = Assert.Throws<ArgumentException>(() => Validator.ThrowIfInvalidOptions(sut1));
+            ParameterName = string.Empty
+        };
+        var sut2 = Assert.Throws<InvalidOperationException>(() => sut1.ValidateOptions());
+        var sut3 = Assert.Throws<ArgumentException>(() => Validator.ThrowIfInvalidOptions(sut1));
 
-            Assert.Equal("Operation is not valid due to the current state of the object. (Expression 'Condition.IsNull(ParameterName) || Condition.IsEmpty(ParameterName) || Condition.IsWhiteSpace(ParameterName)')", sut2.Message);
-            Assert.Equal("RestfulApiVersioningOptions are not in a valid state. (Parameter 'sut1')", sut3.Message);
-            Assert.IsType<InvalidOperationException>(sut3.InnerException);
-        }
+        Assert.Equal("Operation is not valid due to the current state of the object. (Expression 'Condition.IsNull(ParameterName) || Condition.IsEmpty(ParameterName) || Condition.IsWhiteSpace(ParameterName)')", sut2.Message);
+        Assert.Equal("RestfulApiVersioningOptions are not in a valid state. (Parameter 'sut1')", sut3.Message);
+        Assert.IsType<InvalidOperationException>(sut3.InnerException);
+    }
 
-        [Fact]
-        public void RestfulApiVersioningOptions_ParameterNameIsEmpty_ShouldThrowInvalidOperationException()
+    [Fact]
+    public void RestfulApiVersioningOptions_ParameterNameIsNull_ShouldThrowInvalidOperationException()
+    {
+        var sut1 = new RestfulApiVersioningOptions
         {
-            var sut1 = new RestfulApiVersioningOptions
-            {
-                ParameterName = string.Empty
-            };
-            var sut2 = Assert.Throws<InvalidOperationException>(() => sut1.ValidateOptions());
-            var sut3 = Assert.Throws<ArgumentException>(() => Validator.ThrowIfInvalidOptions(sut1));
+            ParameterName = null
+        };
+        var sut2 = Assert.Throws<InvalidOperationException>(() => sut1.ValidateOptions());
+        var sut3 = Assert.Throws<ArgumentException>(() => Validator.ThrowIfInvalidOptions(sut1));
 
-            Assert.Equal("Operation is not valid due to the current state of the object. (Expression 'Condition.IsNull(ParameterName) || Condition.IsEmpty(ParameterName) || Condition.IsWhiteSpace(ParameterName)')", sut2.Message);
-            Assert.Equal("RestfulApiVersioningOptions are not in a valid state. (Parameter 'sut1')", sut3.Message);
-            Assert.IsType<InvalidOperationException>(sut3.InnerException);
-        }
+        Assert.Equal("Operation is not valid due to the current state of the object. (Expression 'Condition.IsNull(ParameterName) || Condition.IsEmpty(ParameterName) || Condition.IsWhiteSpace(ParameterName)')", sut2.Message);
+        Assert.Equal("RestfulApiVersioningOptions are not in a valid state. (Parameter 'sut1')", sut3.Message);
+        Assert.IsType<InvalidOperationException>(sut3.InnerException);
+    }
 
-        [Fact]
-        public void RestfulApiVersioningOptions_ParameterNameIsNull_ShouldThrowInvalidOperationException()
+    [Fact]
+    public void RestfulApiVersioningOptions_ValidAcceptHeadersIsNull_ShouldThrowInvalidOperationException()
+    {
+        var sut1 = new RestfulApiVersioningOptions
         {
-            var sut1 = new RestfulApiVersioningOptions
-            {
-                ParameterName = null
-            };
-            var sut2 = Assert.Throws<InvalidOperationException>(() => sut1.ValidateOptions());
-            var sut3 = Assert.Throws<ArgumentException>(() => Validator.ThrowIfInvalidOptions(sut1));
+            ValidAcceptHeaders = null
+        };
+        var sut2 = Assert.Throws<InvalidOperationException>(() => sut1.ValidateOptions());
+        var sut3 = Assert.Throws<ArgumentException>(() => Validator.ThrowIfInvalidOptions(sut1));
 
-            Assert.Equal("Operation is not valid due to the current state of the object. (Expression 'Condition.IsNull(ParameterName) || Condition.IsEmpty(ParameterName) || Condition.IsWhiteSpace(ParameterName)')", sut2.Message);
-            Assert.Equal("RestfulApiVersioningOptions are not in a valid state. (Parameter 'sut1')", sut3.Message);
-            Assert.IsType<InvalidOperationException>(sut3.InnerException);
-        }
+        Assert.Equal("Operation is not valid due to the current state of the object. (Expression 'ValidAcceptHeaders == null')", sut2.Message);
+        Assert.Equal("RestfulApiVersioningOptions are not in a valid state. (Parameter 'sut1')", sut3.Message);
+        Assert.IsType<InvalidOperationException>(sut3.InnerException);
+    }
 
-        [Fact]
-        public void RestfulApiVersioningOptions_ValidAcceptHeadersIsNull_ShouldThrowInvalidOperationException()
-        {
-            var sut1 = new RestfulApiVersioningOptions
-            {
-                ValidAcceptHeaders = null
-            };
-            var sut2 = Assert.Throws<InvalidOperationException>(() => sut1.ValidateOptions());
-            var sut3 = Assert.Throws<ArgumentException>(() => Validator.ThrowIfInvalidOptions(sut1));
+    [Fact]
+    public void RestfulApiVersioningOptions_UseApiVersionSelector_ShouldUpdateApiVersionSelectorType()
+    {
+        var sut = new RestfulApiVersioningOptions();
+        var result = sut.UseApiVersionSelector<LowestImplementedApiVersionSelector>();
 
-            Assert.Equal("Operation is not valid due to the current state of the object. (Expression 'ValidAcceptHeaders == null')", sut2.Message);
-            Assert.Equal("RestfulApiVersioningOptions are not in a valid state. (Parameter 'sut1')", sut3.Message);
-            Assert.IsType<InvalidOperationException>(sut3.InnerException);
-        }
+        Assert.Same(sut, result);
+        Assert.Equal(typeof(LowestImplementedApiVersionSelector), sut.ApiVersionSelectorType);
+    }
 
-        [Fact]
-        public void RestfulApiVersioningOptions_UseApiVersionSelector_ShouldUpdateApiVersionSelectorType()
-        {
-            var sut = new RestfulApiVersioningOptions();
-            var result = sut.UseApiVersionSelector<LowestImplementedApiVersionSelector>();
+    [Fact]
+    public void RestfulApiVersioningOptions_ShouldHaveDefaultValues()
+    {
+        var sut = new RestfulApiVersioningOptions();
 
-            Assert.Same(sut, result);
-            Assert.Equal(typeof(LowestImplementedApiVersionSelector), sut.ApiVersionSelectorType);
-        }
-
-        [Fact]
-        public void RestfulApiVersioningOptions_ShouldHaveDefaultValues()
-        {
-            var sut = new RestfulApiVersioningOptions();
-
-            Assert.NotNull(sut.ValidAcceptHeaders);
-            Assert.True(typeof(CurrentImplementationApiVersionSelector) == sut.ApiVersionSelectorType, "typeof(CurrentImplementationApiVersionSelector) == sut.ApiVersionSelectorType");
-            //Assert.True(typeof(RestfulProblemDetailsFactory) == sut.ProblemDetailsFactoryType, "typeof(RestfulProblemDetailsFactory) == sut.ProblemDetailsFactoryType");
-            Assert.Equal(ApiVersion.Default, sut.DefaultApiVersion);
-            Assert.Equal("v", sut.ParameterName);
-            Assert.NotNull(sut.Conventions);
-        }
+        Assert.NotNull(sut.ValidAcceptHeaders);
+        Assert.True(typeof(CurrentImplementationApiVersionSelector) == sut.ApiVersionSelectorType, "typeof(CurrentImplementationApiVersionSelector) == sut.ApiVersionSelectorType");
+        //Assert.True(typeof(RestfulProblemDetailsFactory) == sut.ProblemDetailsFactoryType, "typeof(RestfulProblemDetailsFactory) == sut.ProblemDetailsFactoryType");
+        Assert.Equal(ApiVersion.Default, sut.DefaultApiVersion);
+        Assert.Equal("v", sut.ParameterName);
+        Assert.NotNull(sut.Conventions);
     }
 }

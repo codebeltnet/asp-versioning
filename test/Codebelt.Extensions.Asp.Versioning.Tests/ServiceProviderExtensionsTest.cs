@@ -6,66 +6,43 @@ using Cuemon.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Codebelt.Extensions.Asp.Versioning
+namespace Codebelt.Extensions.Asp.Versioning;
+public class ServiceProviderExtensionsTest : Test
 {
-    public class ServiceProviderExtensionsTest : Test
+    public ServiceProviderExtensionsTest(ITestOutputHelper output) : base(output)
     {
-        public ServiceProviderExtensionsTest(ITestOutputHelper output) : base(output)
+    }
+
+    [Fact]
+    public void GetServiceDescriptors_ShouldGetDescriptors_WhenProviderIsWrappedByAspVersioningInjectApiVersion()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton(new object());
+
+        using (var serviceProvider = services.BuildServiceProvider())
         {
-        }
+            var wrappedProvider = new global::Asp.Versioning.Builder.EndpointBuilderFinalizer.InjectApiVersion(serviceProvider);
 
-        [Fact]
-        public void GetServiceDescriptors_ShouldGetDescriptors_WhenProviderIsWrappedByAspVersioningInjectApiVersion()
-        {
-            var services = new ServiceCollection();
-            services.AddSingleton(new object());
+            var descriptors = wrappedProvider.GetServiceDescriptors().ToList();
 
-            using (var serviceProvider = services.BuildServiceProvider())
-            {
-                var wrappedProvider = new global::Asp.Versioning.Builder.EndpointBuilderFinalizer.InjectApiVersion(serviceProvider);
-
-                var descriptors = wrappedProvider.GetServiceDescriptors().ToList();
-
-                Assert.EndsWith("Asp.Versioning.Builder.EndpointBuilderFinalizer+InjectApiVersion", wrappedProvider.GetType().FullName, StringComparison.Ordinal);
-                Assert.Contains(descriptors, descriptor => descriptor.ServiceType == typeof(object));
-            }
-        }
-
-        [Fact]
-        public void GetServiceDescriptors_ShouldGetDescriptors_WhenProviderWrapsServiceProvider()
-        {
-            var services = new ServiceCollection();
-            services.AddSingleton(new object());
-
-            using (var serviceProvider = services.BuildServiceProvider())
-            {
-                var wrappedProvider = new DelegatingServiceProvider(serviceProvider);
-
-                var descriptors = wrappedProvider.GetServiceDescriptors().ToList();
-
-                Assert.Contains(descriptors, descriptor => descriptor.ServiceType == typeof(object));
-            }
+            Assert.EndsWith("Asp.Versioning.Builder.EndpointBuilderFinalizer+InjectApiVersion", wrappedProvider.GetType().FullName, StringComparison.Ordinal);
+            Assert.Contains(descriptors, descriptor => descriptor.ServiceType == typeof(object));
         }
     }
-}
 
-namespace Asp.Versioning.Builder
-{
-    internal static class EndpointBuilderFinalizer
+    [Fact]
+    public void GetServiceDescriptors_ShouldGetDescriptors_WhenProviderWrapsServiceProvider()
     {
-        internal sealed class InjectApiVersion : IServiceProvider
+        var services = new ServiceCollection();
+        services.AddSingleton(new object());
+
+        using (var serviceProvider = services.BuildServiceProvider())
         {
-            private readonly IServiceProvider _serviceProvider;
+            var wrappedProvider = new DelegatingServiceProvider(serviceProvider);
 
-            public InjectApiVersion(IServiceProvider serviceProvider)
-            {
-                _serviceProvider = serviceProvider;
-            }
+            var descriptors = wrappedProvider.GetServiceDescriptors().ToList();
 
-            public object GetService(Type serviceType)
-            {
-                return _serviceProvider.GetService(serviceType);
-            }
+            Assert.Contains(descriptors, descriptor => descriptor.ServiceType == typeof(object));
         }
     }
 }
