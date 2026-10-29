@@ -5,7 +5,7 @@ This repository is part of the Codebelt .NET library estate. The instructions be
 ## Before you start
 
 - Read the repository `README.md` and open an issue before starting a non-trivial feature or behavioral change.
-- Use an installed .NET SDK that can build the target frameworks listed below. This repository currently targets: **net11.0, net10.0**.
+- Use an installed .NET SDK that can build the target frameworks listed below. This repository currently targets: **net10.0, net11.0**.
 - The solution is `Codebelt.Extensions.Asp.Versioning.slnx`. Central package versions are maintained in `Directory.Packages.props`.
 - The shared build behavior is in `Directory.Build.props` and `Directory.Build.targets`; repository-specific TFMs, package references and metadata remain local to this library.
 
@@ -39,14 +39,13 @@ foreach ($project in $testProjects) {
 }
 ```
 
-Use `--coverlet` to collect coverage with the shared `test/testconfig.json`; it explicitly includes the production assembly so Coverlet's inferred exclusions do not omit this Codebelt package.
-
 The CI test plan currently runs **2** project(s) and excludes **0** project(s). The workflow also has an optional macOS test job.
 
 ## Integration and infrastructure
 
 - `WSL-Ubuntu` — WSL distribution `Ubuntu-24.04`.
-- `Docker-Ubuntu` — Docker image `codebeltnet/ubuntu-testrunner:8-9-10-11`.
+- `Docker-Ubuntu (net10.0)` — Docker image `codebeltnet/ubuntu-testrunner:10`.
+- `Docker-Ubuntu (net11.0)` — Docker image `codebeltnet/ubuntu-testrunner:11`.
 
 This repository has no repository-local `docker-compose.yml` service dependency in the current checkout.
 Use the environments declared in `testenvironments.json` when you need the estate test runner.
@@ -59,7 +58,7 @@ Create packages using the same solution and Release configuration:
 dotnet pack "Codebelt.Extensions.Asp.Versioning.slnx" --configuration Release --no-restore
 ```
 
-Package-specific release notes live under `.nuget/<ProjectName>/PackageReleaseNotes.txt` and package README files live beside them. `Directory.Build.targets` imports the release notes during packing. Public API changes also require XML documentation updates; DocFX documentation is built by the repository automation. Its API model remains on the retained `net10.0` target, which exposes the same public API and keeps the existing documentation container compatible.
+Package-specific release notes live under `.nuget/<ProjectName>/PackageReleaseNotes.txt` and package README files live beside them. `Directory.Build.targets` imports the release notes during packing. Public API changes also require XML documentation updates; DocFX documentation is built by the repository automation.
 
 ## Pull requests
 
