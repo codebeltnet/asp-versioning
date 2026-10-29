@@ -4,7 +4,7 @@ This document provides guidance for AI agents working in this repository.
 
 ## Project Overview
 
-Codebelt.Extensions.Asp.Versioning is a .NET library providing uniform, opinionated, and extensible APIs for ASP.NET Core RESTful API versioning. The solution targets .NET 10.0 and .NET 9.0. It includes:
+Codebelt.Extensions.Asp.Versioning is a .NET library providing uniform, opinionated, and extensible APIs for ASP.NET Core RESTful API versioning. The solution targets .NET 11.0 and .NET 10.0. It includes:
 
 - **Codebelt.Extensions.Asp.Versioning** — Core library for API versioning with middleware integration, service configuration, and version parsing strategies.
 

@@ -2,7 +2,7 @@
 
 An open-source project (MIT license) that targets and complements the [asp-versioning](https://github.com/dotnet/aspnet-api-versioning) versioning engine. It aims to provide a uniform and convenient developer experience when working with RESTful API versioning.
 
-Your versatile Asp.Versioning companion for modern development with `.NET 9` and `.NET 10`.
+Your versatile Asp.Versioning companion for modern development with `.NET 10` and `.NET 11`.
 
 It is, by heart, free, flexible and built to extend and boost your agile codebelt.
 
