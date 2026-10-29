@@ -243,7 +243,13 @@ namespace Codebelt.Extensions.Asp.Versioning
                 Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
                 Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
                 Assert.EndsWith("*/*", sut.Content.Headers.ContentType.ToString());
-                Assert.True(Match("""
+                // ASP.NET Core 11 changed the compiler-generated endpoint middleware frame name.
+#if NET11_0_OR_GREATER
+                const string endpointMiddlewareFrame = "6_0";
+#else
+                const string endpointMiddlewareFrame = "7_0";
+#endif
+                Assert.True(Match($$"""
                             Error:
                               Instance: http://localhost/fake/throw
                               Status: 400
@@ -257,7 +263,7 @@ namespace Codebelt.Extensions.Asp.Versioning
                                   - at Codebelt.Extensions.Asp.Versioning.ServiceCollectionExtensions.<>c.<AddRestfulApiVersioning>*
                                   - at Microsoft.AspNetCore.Http.DefaultProblemDetailsWriter.WriteAsync(ProblemDetailsContext context)
                                   - at Microsoft.AspNetCore.Http.ProblemDetailsService.TryWriteAsync(ProblemDetailsContext context)
-                                  - at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+                                  - at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|{{endpointMiddlewareFrame}}(Endpoint endpoint, Task requestTask, ILogger logger)
                                   - at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
                                 StatusCode: 400
                                 ReasonPhrase: Bad Request
