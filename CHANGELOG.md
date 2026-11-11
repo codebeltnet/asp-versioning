@@ -9,22 +9,26 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 
 ## [11.0.0] - 2026-11-10
 
-This is a major release moving the supported baseline to .NET 11 and .NET 10. .NET 9 consumers must remain on the 10.x package line or upgrade their application framework.
+This major release replaces the .NET 9 target with .NET 11 while retaining .NET 10. It updates dependencies, test infrastructure, and documentation hosting.
 
 ### Added
 
-- Added SonarAnalyzer.CSharp 10.35.0.4138 as a private production build dependency.
+- A .NET 11 target for the library and tests,
+- `SonarAnalyzer.CSharp` 10.35.0.4138 as a private production build dependency.
 
 ### Changed
 
-- Replaced the .NET 9 target with .NET 11 for the library and both test projects, retaining .NET 10 and the compatible stable Asp.Versioning 10.x and Cuemon 10.8.2 dependencies,
-- Enabled prerelease SDK provisioning for build, pack, tests, SonarCloud, and CodeQL using the existing reusable-workflow contracts,
-- Updated Codebelt.Coverlet.MTP from 10.1.0 to 10.1.1, Microsoft.Testing.Extensions.HangDump from 2.5.1 to 2.5.2, and Cuemon.AspNetCore, Cuemon.Extensions.AspNetCore.Mvc, Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json, and Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml from 10.8.1 to 10.8.2,
+- Updated `Codebelt.Coverlet.MTP` from 10.1.0 to 10.1.1, `Microsoft.Testing.Extensions.HangDump` from 2.5.1 to 2.5.2, and `Cuemon.AspNetCore`, `Cuemon.Extensions.AspNetCore.Mvc`, `Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json`, and `Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml` from 10.8.1 to 10.8.2,
+- Enabled preview SDK provisioning, configured separate .NET 10 and .NET 11 Docker test runners, and updated contributor guidance,
 - Updated the YAML error response test to expect the ASP.NET Core 11 generated stack-frame name while retaining the complete response assertion,
-- Applied file-scoped namespaces and required namespace diagnostics, refreshed Sonar rule links, and normalized tracked text to LF without a UTF-8 BOM,
-- Configured Docker test environments for .NET 10 and .NET 11 and refreshed contributor instructions,
-- Updated DocFX sitemap hosting and nginx configuration,
-- Aligned current framework availability, package documentation, contributing guidance, and the service-update availability fallback with .NET 11 and .NET 10.
+- Service-update automation retains planned releases and validates release dates,
+- Fingerprinted documentation assets use immutable caching for successful and 304 responses, no-store for errors, and full responses instead of ranges,
+- Updated package and DocFX availability for the supported frameworks.
+
+### Removed
+
+- The .NET 9 target; consumers must target .NET 10 or later,
+- The .NET 9 conditional declarations for `Asp.Versioning.Abstractions` 8.1.0, `Asp.Versioning.Http` 8.1.1, `Asp.Versioning.Mvc` 8.1.1, and `Asp.Versioning.Mvc.ApiExplorer` 8.1.1; the packages remain declared for supported frameworks.
 
 ## [10.2.5] - 2026-10-17
 
