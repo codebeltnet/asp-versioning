@@ -7,28 +7,34 @@ For more details, please refer to `PackageReleaseNotes.txt` on a per assembly ba
 > [!NOTE]
 > Changelog entries prior to version 8.4.0 was migrated from previous versions of Cuemon.Extensions.Asp.Versioning.
 
-## [11.0.0] - 2026-11-10
+## [11.0.0] - 2026-11-12
 
-This major release replaces the .NET 9 target with .NET 11 while retaining .NET 10. It updates dependencies, test infrastructure, and documentation hosting.
+This is a major release that adds .NET 11 support and drops .NET 9, updates dependencies and development infrastructure, and corrects documentation asset caching.
 
 ### Added
 
-- A .NET 11 target for the library and tests,
-- `SonarAnalyzer.CSharp` 10.35.0.4138 as a private production build dependency.
+- .NET 11 targets for the library and tests,
+- `SonarAnalyzer.CSharp` 10.36.0.15337 as a private production build dependency.
 
 ### Changed
 
-- Updated `Codebelt.Coverlet.MTP` from 10.1.0 to 10.1.1, `Microsoft.Testing.Extensions.HangDump` from 2.5.1 to 2.5.2, and `Cuemon.AspNetCore`, `Cuemon.Extensions.AspNetCore.Mvc`, `Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json`, and `Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml` from 10.8.1 to 10.8.2,
-- Enabled preview SDK provisioning, configured separate .NET 10 and .NET 11 Docker test runners, and updated contributor guidance,
-- Updated the YAML error response test to expect the ASP.NET Core 11 generated stack-frame name while retaining the complete response assertion,
-- Service-update automation retains planned releases and validates release dates,
-- Fingerprinted documentation assets use immutable caching for successful and 304 responses, no-store for errors, and full responses instead of ranges,
-- Updated package and DocFX availability for the supported frameworks.
+- Updated `Cuemon.AspNetCore` and the test dependencies `Cuemon.Extensions.AspNetCore.Mvc`, `Cuemon.Extensions.AspNetCore.Mvc.Formatters.Text.Json`, and `Cuemon.Extensions.AspNetCore.Mvc.Formatters.Xml` from 10.8.1 to 11.0.0,
+- Updated test dependencies `Codebelt.Extensions.AspNetCore.Mvc.Formatters.Newtonsoft.Json` and `Codebelt.Extensions.AspNetCore.Mvc.Formatters.Text.Yaml` from 10.1.9 to 11.0.0, and `Codebelt.Extensions.Xunit.App` from 12.0.2 to 13.0.0,
+- Updated test tooling `Codebelt.Coverlet.MTP` from 10.1.0 to 11.0.0, `Microsoft.NET.Test.Sdk` from 18.11.0 to 18.12.0, `Microsoft.Testing.Extensions.HangDump` from 2.5.1 to 2.5.3, and `xunit.v3` and `xunit.v3.runner.console` from 4.0.2 to 4.0.3,
+- Moved Linux CI and the WSL test environment to Ubuntu 26.04 and configured separate .NET 10 and .NET 11 Docker test environments,
+- Updated and pinned the Scorecard workflow actions to commit SHAs,
+- Service-update automation preserves planned future releases and validates changelog release dates,
+- Updated the documentation sitemap URL and framework availability, and enforced file-scoped namespaces in repository code.
 
 ### Removed
 
 - The .NET 9 target; consumers must target .NET 10 or later,
-- The .NET 9 conditional declarations for `Asp.Versioning.Abstractions` 8.1.0, `Asp.Versioning.Http` 8.1.1, `Asp.Versioning.Mvc` 8.1.1, and `Asp.Versioning.Mvc.ApiExplorer` 8.1.1; the packages remain declared for supported frameworks.
+- The .NET 9-specific Asp.Versioning 8.1.x declarations; the Asp.Versioning packages remain dependencies for supported targets,
+- The repository benchmark prompt.
+
+### Fixed
+
+- Fingerprinted documentation assets are cached immutably only for successful or 304 responses; other responses use `no-store`, and range requests are disabled for these assets.
 
 ## [10.2.5] - 2026-10-17
 
