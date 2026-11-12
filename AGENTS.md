@@ -4,7 +4,7 @@ This document provides guidance for AI agents working in this repository.
 
 ## Project Overview
 
-Codebelt.Extensions.Asp.Versioning is a .NET library providing uniform, opinionated, and extensible APIs for ASP.NET Core RESTful API versioning. The solution targets .NET 10.0 and .NET 9.0. It includes:
+Codebelt.Extensions.Asp.Versioning is a .NET library providing uniform, opinionated, and extensible APIs for ASP.NET Core RESTful API versioning. The solution targets .NET 11.0 and .NET 10.0. It includes:
 
 - **Codebelt.Extensions.Asp.Versioning** — Core library for API versioning with middleware integration, service configuration, and version parsing strategies.
 
@@ -130,7 +130,7 @@ This document provides instructions for writing unit tests for a project/solutio
 
 ## 1. Base Class
 
-**Always inherit from the `Test` base class** for all unit test classes.  
+**Always inherit from the `Test` base class** for all unit test classes.
 This ensures consistent setup, teardown, and output handling across all tests.
 
 > Important: Do NOT add `using Xunit.Abstractions`. xUnit v3 no longer exposes that namespace; including it is incorrect and will cause compilation errors. Use the `Codebelt.Extensions.Xunit` Test base class and `using Xunit;` as shown in the examples below. If you need access to test output, rely on the Test base class (which accepts the appropriate output helper) rather than importing `Xunit.Abstractions`.
@@ -280,13 +280,13 @@ namespace YourProject
 
 **Pattern name:** Public Facade Testing (also referred to as *Public API Proxy Testing*)
 
-**Description:**  
+**Description:**
 Internal classes and methods must be validated by exercising the public API that consumes them. Tests should assert observable behavior exposed by the public surface rather than targeting internal implementation details directly.
 
 ### Example Mapping
 
-- **Internal helper:** `DelimitedString` (internal static class)  
-- **Public API:** `TestOutputHelperExtensions.WriteLines()` (public extension method)  
+- **Internal helper:** `DelimitedString` (internal static class)
+- **Public API:** `TestOutputHelperExtensions.WriteLines()` (public extension method)
 - **Test strategy:** Write tests for `WriteLines()` and verify its public behavior. The internal call to `DelimitedString.Create()` is exercised implicitly.
 
 ### Benefits

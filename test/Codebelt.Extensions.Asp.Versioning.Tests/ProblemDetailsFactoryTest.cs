@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -22,325 +22,330 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Codebelt.Extensions.Asp.Versioning
+namespace Codebelt.Extensions.Asp.Versioning;
+
+public class ProblemDetailsFactoryTest : Test
 {
-    public class ProblemDetailsFactoryTest : Test
+    public ProblemDetailsFactoryTest(ITestOutputHelper output) : base(output)
     {
-        public ProblemDetailsFactoryTest(ITestOutputHelper output) : base(output)
+    }
+
+    [Fact]
+    public async Task UseFaultDescriptorExceptionHandler_ShouldFormatException_WhenRequestServicesIsWrappedByAspVersioningInjectApiVersion()
+    {
+        using (var app = WebHostTestFactory.Create(services =>
+               {
+                   services.AddFaultDescriptorOptions(o => o.FaultDescriptor = PreferredFaultDescriptor.ProblemDetails);
+                   services.AddJsonExceptionResponseFormatter();
+               }, app =>
+               {
+                   app.UseFaultDescriptorExceptionHandler();
+                   app.Use((System.Func<HttpContext, System.Func<Task>, Task>)((context, _) =>
+                   {
+                       context.RequestServices = new global::Asp.Versioning.Builder.EndpointBuilderFinalizer.InjectApiVersion(context.RequestServices);
+                       throw new NotFoundException();
+                   }));
+               }))
         {
+            var client = app.Host.GetTestClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            var sut = await client.GetAsync("/");
+            var body = await sut.Content.ReadAsStringAsync();
+
+            TestOutput.WriteLine(body);
+
+            Assert.Equal(HttpStatusCode.NotFound, sut.StatusCode);
+            Assert.Equal("application/json", sut.Content.Headers.ContentType.MediaType);
+            Assert.Contains("\"title\": \"NotFound\"", body, System.StringComparison.Ordinal);
+            Assert.Contains("\"status\": 404", body, System.StringComparison.Ordinal);
         }
+    }
 
-        [Fact]
-        public async Task UseFaultDescriptorExceptionHandler_ShouldFormatException_WhenRequestServicesIsWrappedByAspVersioningInjectApiVersion()
+    [Fact]
+    public async Task UseFaultDescriptorExceptionHandler_ShouldFormatException_WhenRequestServicesIsWrappedByDelegatingServiceProvider()
+    {
+        using (var app = WebHostTestFactory.Create(services =>
+               {
+                   services.AddFaultDescriptorOptions(o => o.FaultDescriptor = PreferredFaultDescriptor.ProblemDetails);
+                   services.AddJsonExceptionResponseFormatter();
+               }, app =>
+               {
+                   app.UseFaultDescriptorExceptionHandler();
+                   app.Use((System.Func<HttpContext, System.Func<Task>, Task>)((context, _) =>
+                   {
+                       context.RequestServices = new DelegatingServiceProvider(context.RequestServices);
+                       throw new NotFoundException();
+                   }));
+               }))
         {
-            using (var app = WebHostTestFactory.Create(services =>
-                   {
-                       services.AddFaultDescriptorOptions(o => o.FaultDescriptor = PreferredFaultDescriptor.ProblemDetails);
-                       services.AddJsonExceptionResponseFormatter();
-                   }, app =>
-                   {
-                       app.UseFaultDescriptorExceptionHandler();
-                       app.Use((System.Func<HttpContext, System.Func<Task>, Task>)((context, _) =>
-                       {
-                           context.RequestServices = new global::Asp.Versioning.Builder.EndpointBuilderFinalizer.InjectApiVersion(context.RequestServices);
-                           throw new NotFoundException();
-                       }));
-                   }))
-            {
-                var client = app.Host.GetTestClient();
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-                var sut = await client.GetAsync("/");
-                var body = await sut.Content.ReadAsStringAsync();
+            var client = app.Host.GetTestClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            var sut = await client.GetAsync("/");
+            var body = await sut.Content.ReadAsStringAsync();
 
-                TestOutput.WriteLine(body);
+            TestOutput.WriteLine(body);
 
-                Assert.Equal(HttpStatusCode.NotFound, sut.StatusCode);
-                Assert.Equal("application/json", sut.Content.Headers.ContentType.MediaType);
-                Assert.Contains("\"title\": \"NotFound\"", body, System.StringComparison.Ordinal);
-                Assert.Contains("\"status\": 404", body, System.StringComparison.Ordinal);
-            }
+            Assert.Equal(HttpStatusCode.NotFound, sut.StatusCode);
+            Assert.Equal("application/json", sut.Content.Headers.ContentType.MediaType);
+            Assert.Contains("\"title\": \"NotFound\"", body, System.StringComparison.Ordinal);
+            Assert.Contains("\"status\": 404", body, System.StringComparison.Ordinal);
         }
+    }
 
-        [Fact]
-        public async Task UseFaultDescriptorExceptionHandler_ShouldFormatException_WhenRequestServicesIsWrappedByDelegatingServiceProvider()
+    [Fact]
+    public async Task GetRequest_ShouldFailWithBadRequest_FormattedAsRfc7807_As_b3_IsAnUnknownVersion()
+    {
+        using (var app = WebHostTestFactory.Create(services =>
+               {
+                   services.AddControllers().AddApplicationPart(typeof(FakeController).Assembly)
+                       .AddJsonFormatters();
+                   services.AddRestfulApiVersioning(o =>
+                   {
+                       o.UseBuiltInRfc7807 = true;
+                       o.ValidAcceptHeaders.Clear();
+                   });
+               }, app =>
+               {
+                   app.UseRouting();
+                   app.UseEndpoints(routes => { routes.MapControllers(); });
+               }))
         {
-            using (var app = WebHostTestFactory.Create(services =>
-                   {
-                       services.AddFaultDescriptorOptions(o => o.FaultDescriptor = PreferredFaultDescriptor.ProblemDetails);
-                       services.AddJsonExceptionResponseFormatter();
-                   }, app =>
-                   {
-                       app.UseFaultDescriptorExceptionHandler();
-                       app.Use((System.Func<HttpContext, System.Func<Task>, Task>)((context, _) =>
-                       {
-                           context.RequestServices = new DelegatingServiceProvider(context.RequestServices);
-                           throw new NotFoundException();
-                       }));
-                   }))
-            {
-                var client = app.Host.GetTestClient();
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-                var sut = await client.GetAsync("/");
-                var body = await sut.Content.ReadAsStringAsync();
+            var client = app.Host.GetTestClient();
+            client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+            var sut = await client.GetAsync("/fake/");
 
-                TestOutput.WriteLine(body);
+            TestOutput.WriteLine(sut.Content.Headers.ContentType.ToString());
+            TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
 
-                Assert.Equal(HttpStatusCode.NotFound, sut.StatusCode);
-                Assert.Equal("application/json", sut.Content.Headers.ContentType.MediaType);
-                Assert.Contains("\"title\": \"NotFound\"", body, System.StringComparison.Ordinal);
-                Assert.Contains("\"status\": 404", body, System.StringComparison.Ordinal);
-            }
+            Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
+            Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
+            Assert.EndsWith("application/problem+json", sut.Content.Headers.ContentType.ToString());
+
+
+            var expected = """{"type":"https://docs.api-versioning.org/problems#invalid","title":"Invalid API version","status":400,"detail":"The HTTP resource that matches the request URI 'http://localhost/fake/' does not support the API version 'b3'.","code":"InvalidApiVersion","traceId":"*"}""";
+            Assert.True(Match(expected, await sut.Content.ReadAsStringAsync()));
+
+            // sadly Microsoft does not use the formatter we feed into the pipeline .. they use their own horrid WriteJsonAsync implementation ..
         }
+    }
 
-        [Fact]
-        public async Task GetRequest_ShouldFailWithBadRequest_FormattedAsRfc7807_As_b3_IsAnUnknownVersion()
-        {
-            using (var app = WebHostTestFactory.Create(services =>
+    [Fact]
+    public async Task GetRequest_ShouldFailWithBadRequestFormattedAsXmlResponse_As_b3_IsAnUnknownVersion()
+    {
+        using (var app = WebHostTestFactory.Create(services =>
+               {
+                   services.AddFaultDescriptorOptions();
+                   services.AddControllers(o => o.Filters.AddFaultDescriptor())
+                       .AddApplicationPart(typeof(FakeController).Assembly)
+                       .AddJsonFormatters()
+                       .AddXmlFormatters();
+                   services.AddHttpContextAccessor();
+                   services.AddRestfulApiVersioning(o =>
                    {
-                       services.AddControllers().AddApplicationPart(typeof(FakeController).Assembly)
-                           .AddJsonFormatters();
-                       services.AddRestfulApiVersioning(o =>
+                       o.ValidAcceptHeaders.Clear();
+                   });
+               }, app =>
+                      {
+                          app.UseFaultDescriptorExceptionHandler();
+                          app.UseRestfulApiVersioning();
+                          app.UseRouting();
+                          app.UseEndpoints(routes => { routes.MapControllers(); });
+
+                      }))
+        {
+            var client = app.Host.GetTestClient();
+            client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/xml;q=0.9");
+            var sut = await client.GetAsync("/fake/throw");
+
+            TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
+
+            Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
+            Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
+            Assert.EndsWith("application/xml", sut.Content.Headers.ContentType.ToString());
+            Assert.True(Match(@"<?xml version=""1.0"" encoding=""utf-8""?><HttpExceptionDescriptor><Error><Instance>http://localhost/fake/throw</Instance><Status>400</Status><Code>BadRequest</Code><Message>The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.</Message></Error><TraceId>*</TraceId></HttpExceptionDescriptor>", await sut.Content.ReadAsStringAsync()));
+        }
+    }
+
+    [Fact]
+    public async Task GetRequest_ShouldFailWithBadRequestFormattedAsJsonResponse_As_b3_IsAnUnknownVersion()
+    {
+        using (var app = WebHostTestFactory.Create(services =>
+               {
+                   services.AddFaultDescriptorOptions();
+                   services.AddControllers(o => o.Filters.AddFaultDescriptor())
+                       .AddApplicationPart(typeof(FakeController).Assembly)
+                       .AddJsonFormatters(o => o.Settings.Encoder = JavaScriptEncoder.Default);
+                   services.AddHttpContextAccessor();
+                   services.AddRestfulApiVersioning(o =>
+                   {
+                       o.ValidAcceptHeaders.Clear();
+                   });
+               }, app =>
+               {
+                   app.UseFaultDescriptorExceptionHandler();
+                   app.UseRouting();
+                   app.UseEndpoints(routes => { routes.MapControllers(); });
+
+               }))
+        {
+            var client = app.Host.GetTestClient();
+            client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
+            var sut = await client.GetAsync("/fake/throw");
+
+            TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
+
+            Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
+            Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
+            Assert.EndsWith("application/json", sut.Content.Headers.ContentType.ToString());
+            Assert.True(Match("""
+                              {
+                                "error": {
+                                  "instance": "http://localhost/fake/throw",
+                                  "status": 400,
+                                  "code": "BadRequest",
+                                  "message": "The HTTP resource that matches the request URI \u0027http://localhost/fake/throw\u0027 does not support the API version \u0027b3\u0027."
+                                },
+                                "traceId": "*"
+                              }
+                              """.ReplaceLineEndings(), (await sut.Content.ReadAsStringAsync())));
+        }
+    }
+
+    [Fact]
+    public async Task GetRequest_ShouldFailWithBadRequestFormattedAsYamlResponse_As_b3_IsAnUnknownVersion()
+    {
+        using (var app = WebHostTestFactory.Create(services =>
+               {
+                   services.AddFaultDescriptorOptions();
+                   services.AddControllers(o => o.Filters.AddFaultDescriptor())
+                       .AddApplicationPart(typeof(FakeController).Assembly)
+                       .AddYamlFormatters(o => o.Settings.NamingConvention = PascalCaseNamingConvention.Instance);
+                   services.AddHttpContextAccessor()
+                       .AddRestfulApiVersioning(o =>
                        {
-                           o.UseBuiltInRfc7807 = true;
                            o.ValidAcceptHeaders.Clear();
-                       });
-                   }, app =>
-                   {
-                       app.UseRouting();
-                       app.UseEndpoints(routes => { routes.MapControllers(); });
-                   }))
-            {
-                var client = app.Host.GetTestClient();
-                client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-                var sut = await client.GetAsync("/fake/");
+                       })
+                       .PostConfigureAllOf<IExceptionDescriptorOptions>(o => o.SensitivityDetails = FaultSensitivityDetails.All);
+               }, app =>
+                      {
+                          app.UseFaultDescriptorExceptionHandler();
+                          app.UseRouting();
+                          app.UseEndpoints(routes => { routes.MapControllers(); });
 
-                TestOutput.WriteLine(sut.Content.Headers.ContentType.ToString());
-                TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
-
-                Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
-                Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
-                Assert.EndsWith("application/problem+json", sut.Content.Headers.ContentType.ToString());
-
-
-                var expected = """{"type":"https://docs.api-versioning.org/problems#invalid","title":"Invalid API version","status":400,"detail":"The HTTP resource that matches the request URI 'http://localhost/fake/' does not support the API version 'b3'.","code":"InvalidApiVersion","traceId":"*"}""";
-                Assert.True(Match(expected, await sut.Content.ReadAsStringAsync()));
-
-                // sadly Microsoft does not use the formatter we feed into the pipeline .. they use their own horrid WriteJsonAsync implementation .. 
-            }
-        }
-
-        [Fact]
-        public async Task GetRequest_ShouldFailWithBadRequestFormattedAsXmlResponse_As_b3_IsAnUnknownVersion()
+                      }))
         {
-            using (var app = WebHostTestFactory.Create(services =>
-                   {
-                       services.AddFaultDescriptorOptions();
-                       services.AddControllers(o => o.Filters.AddFaultDescriptor())
-                           .AddApplicationPart(typeof(FakeController).Assembly)
-                           .AddJsonFormatters()
-                           .AddXmlFormatters();
-                       services.AddHttpContextAccessor();
-                       services.AddRestfulApiVersioning(o =>
-                       {
-                           o.ValidAcceptHeaders.Clear();
-                       });
-                   }, app =>
-                          {
-                              app.UseFaultDescriptorExceptionHandler();
-                              app.UseRestfulApiVersioning();
-                              app.UseRouting();
-                              app.UseEndpoints(routes => { routes.MapControllers(); });
+            var client = app.Host.GetTestClient();
+            client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
+            var sut = await client.GetAsync("/fake/throw");
 
-                          }))
-            {
-                var client = app.Host.GetTestClient();
-                client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/xml;q=0.9");
-                var sut = await client.GetAsync("/fake/throw");
+            TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
 
-                TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
-
-                Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
-                Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
-                Assert.EndsWith("application/xml", sut.Content.Headers.ContentType.ToString());
-                Assert.True(Match(@"<?xml version=""1.0"" encoding=""utf-8""?><HttpExceptionDescriptor><Error><Instance>http://localhost/fake/throw</Instance><Status>400</Status><Code>BadRequest</Code><Message>The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.</Message></Error><TraceId>*</TraceId></HttpExceptionDescriptor>", await sut.Content.ReadAsStringAsync()));
-            }
+            Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
+            Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
+            Assert.EndsWith("*/*", sut.Content.Headers.ContentType.ToString());
+            // ASP.NET Core 11 changed the compiler-generated endpoint middleware frame name.
+#if NET11_0_OR_GREATER
+            const string endpointMiddlewareFrame = "6_0";
+#else
+            const string endpointMiddlewareFrame = "7_0";
+#endif
+            Assert.True(Match($$"""
+                        Error:
+                          Instance: http://localhost/fake/throw
+                          Status: 400
+                          Code: BadRequest
+                          Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.
+                          Failure:
+                            Type: Cuemon.AspNetCore.Http.BadRequestException
+                            Source: Codebelt.Extensions.Asp.Versioning
+                            Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.
+                            Stack:
+                              - at Codebelt.Extensions.Asp.Versioning.ServiceCollectionExtensions.<>c.<AddRestfulApiVersioning>*
+                              - at Microsoft.AspNetCore.Http.DefaultProblemDetailsWriter.WriteAsync(ProblemDetailsContext context)
+                              - at Microsoft.AspNetCore.Http.ProblemDetailsService.TryWriteAsync(ProblemDetailsContext context)
+                              - at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|{{endpointMiddlewareFrame}}(Endpoint endpoint, Task requestTask, ILogger logger)
+                              - at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+                            StatusCode: 400
+                            ReasonPhrase: Bad Request
+                        Evidence:
+                          Request:
+                            Location: http://localhost/fake/throw
+                            Method: GET
+                            Headers:
+                              Accept:
+                                - text/html
+                                - application/xhtml+xml
+                                - image/avif
+                                - image/webp
+                                - image/apng
+                                - '*/*; q=0.8'
+                                - application/signed-exchange; v=b3; q=0.9
+                                - application/json; q=10.0
+                              Host:
+                                - localhost
+                            Query: []
+                            Cookies: []
+                            Body: ''
+                        TraceId: *
+                        """.ReplaceLineEndings(), await sut.Content.ReadAsStringAsync(), o => o.ThrowOnNoMatch = true));
         }
+    }
 
-        [Fact]
-        public async Task GetRequest_ShouldFailWithBadRequestFormattedAsJsonResponse_As_b3_IsAnUnknownVersion()
+    [Fact]
+    public async Task GetRequest_ShouldFailWithBadRequestFormattedWithFallbackResponse_As_b3_IsAnUnknownVersion()
+    {
+        using (var app = WebHostTestFactory.Create(services =>
+               {
+                   services.AddFaultDescriptorOptions(o => o.SensitivityDetails = FaultSensitivityDetails.All);
+                   services.AddControllers(o => o.Filters.AddFaultDescriptor())
+                       .AddApplicationPart(typeof(FakeController).Assembly);
+                   services.AddHttpContextAccessor();
+                   services.AddRestfulApiVersioning(o => o.ValidAcceptHeaders.Clear());
+               }, app =>
+                      {
+                          app.UseFaultDescriptorExceptionHandler();
+                          app.UseRouting();
+                          app.UseEndpoints(routes => { routes.MapControllers(); });
+
+                      }))
         {
-            using (var app = WebHostTestFactory.Create(services =>
-                   {
-                       services.AddFaultDescriptorOptions();
-                       services.AddControllers(o => o.Filters.AddFaultDescriptor())
-                           .AddApplicationPart(typeof(FakeController).Assembly)
-                           .AddJsonFormatters(o => o.Settings.Encoder = JavaScriptEncoder.Default);
-                       services.AddHttpContextAccessor();
-                       services.AddRestfulApiVersioning(o =>
-                       {
-                           o.ValidAcceptHeaders.Clear();
-                       });
-                   }, app =>
-                   {
-                       app.UseFaultDescriptorExceptionHandler();
-                       app.UseRouting();
-                       app.UseEndpoints(routes => { routes.MapControllers(); });
+            var client = app.Host.GetTestClient();
+            client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
+            var sut = await client.GetAsync("/fake/throw");
 
-                   }))
-            {
-                var client = app.Host.GetTestClient();
-                client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
-                var sut = await client.GetAsync("/fake/throw");
+            TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
 
-                TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
-
-                Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
-                Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
-                Assert.EndsWith("application/json", sut.Content.Headers.ContentType.ToString());
-                Assert.True(Match("""
-                                  {
-                                    "error": {
-                                      "instance": "http://localhost/fake/throw",
-                                      "status": 400,
-                                      "code": "BadRequest",
-                                      "message": "The HTTP resource that matches the request URI \u0027http://localhost/fake/throw\u0027 does not support the API version \u0027b3\u0027."
-                                    },
-                                    "traceId": "*"
-                                  }
-                                  """.ReplaceLineEndings(), (await sut.Content.ReadAsStringAsync())));
-            }
-        }
-
-        [Fact]
-        public async Task GetRequest_ShouldFailWithBadRequestFormattedAsYamlResponse_As_b3_IsAnUnknownVersion()
-        {
-            using (var app = WebHostTestFactory.Create(services =>
-                   {
-                       services.AddFaultDescriptorOptions();
-                       services.AddControllers(o => o.Filters.AddFaultDescriptor())
-                           .AddApplicationPart(typeof(FakeController).Assembly)
-                           .AddYamlFormatters(o => o.Settings.NamingConvention = PascalCaseNamingConvention.Instance);
-                       services.AddHttpContextAccessor()
-                           .AddRestfulApiVersioning(o =>
-                           {
-                               o.ValidAcceptHeaders.Clear();
-                           })
-                           .PostConfigureAllOf<IExceptionDescriptorOptions>(o => o.SensitivityDetails = FaultSensitivityDetails.All);
-                   }, app =>
-                          {
-                              app.UseFaultDescriptorExceptionHandler();
-                              app.UseRouting();
-                              app.UseEndpoints(routes => { routes.MapControllers(); });
-
-                          }))
-            {
-                var client = app.Host.GetTestClient();
-                client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
-                var sut = await client.GetAsync("/fake/throw");
-
-                TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
-
-                Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
-                Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
-                Assert.EndsWith("*/*", sut.Content.Headers.ContentType.ToString());
-                Assert.True(Match("""
-                            Error:
-                              Instance: http://localhost/fake/throw
-                              Status: 400
-                              Code: BadRequest
-                              Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.
-                              Failure:
-                                Type: Cuemon.AspNetCore.Http.BadRequestException
-                                Source: Codebelt.Extensions.Asp.Versioning
-                                Message: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.
-                                Stack:
-                                  - at Codebelt.Extensions.Asp.Versioning.ServiceCollectionExtensions.<>c.<AddRestfulApiVersioning>*
-                                  - at Microsoft.AspNetCore.Http.DefaultProblemDetailsWriter.WriteAsync(ProblemDetailsContext context)
-                                  - at Microsoft.AspNetCore.Http.ProblemDetailsService.TryWriteAsync(ProblemDetailsContext context)
-                                  - at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
-                                  - at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
-                                StatusCode: 400
-                                ReasonPhrase: Bad Request
-                            Evidence:
-                              Request:
-                                Location: http://localhost/fake/throw
-                                Method: GET
-                                Headers:
-                                  Accept:
-                                    - text/html
-                                    - application/xhtml+xml
-                                    - image/avif
-                                    - image/webp
-                                    - image/apng
-                                    - '*/*; q=0.8'
-                                    - application/signed-exchange; v=b3; q=0.9
-                                    - application/json; q=10.0
-                                  Host:
-                                    - localhost
-                                Query: []
-                                Cookies: []
-                                Body: ''
-                            TraceId: *
-                            """.ReplaceLineEndings(), await sut.Content.ReadAsStringAsync(), o => o.ThrowOnNoMatch = true));
-            }
-        }
-
-        [Fact]
-        public async Task GetRequest_ShouldFailWithBadRequestFormattedWithFallbackResponse_As_b3_IsAnUnknownVersion()
-        {
-            using (var app = WebHostTestFactory.Create(services =>
-                   {
-                       services.AddFaultDescriptorOptions(o => o.SensitivityDetails = FaultSensitivityDetails.All);
-                       services.AddControllers(o => o.Filters.AddFaultDescriptor())
-                           .AddApplicationPart(typeof(FakeController).Assembly);
-                       services.AddHttpContextAccessor();
-                       services.AddRestfulApiVersioning(o => o.ValidAcceptHeaders.Clear());
-                   }, app =>
-                          {
-                              app.UseFaultDescriptorExceptionHandler();
-                              app.UseRouting();
-                              app.UseEndpoints(routes => { routes.MapControllers(); });
-
-                          }))
-            {
-                var client = app.Host.GetTestClient();
-                client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json;q=10.0");
-                var sut = await client.GetAsync("/fake/throw");
-
-                TestOutput.WriteLine(await sut.Content.ReadAsStringAsync());
-
-                Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
-                Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
-                Assert.EndsWith("text/plain", sut.Content.Headers.ContentType.ToString());
-                Assert.StartsWith("Cuemon.AspNetCore.Http.BadRequestException: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.".ReplaceLineEndings(), await sut.Content.ReadAsStringAsync());
-                Assert.Contains(@"Additional Information:
+            Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
+            Assert.Equal(HttpMethod.Get, sut.RequestMessage.Method);
+            Assert.EndsWith("text/plain", sut.Content.Headers.ContentType.ToString());
+            Assert.StartsWith("Cuemon.AspNetCore.Http.BadRequestException: The HTTP resource that matches the request URI 'http://localhost/fake/throw' does not support the API version 'b3'.".ReplaceLineEndings(), await sut.Content.ReadAsStringAsync());
+            Assert.Contains(@"Additional Information:
 	Headers: Microsoft.AspNetCore.Http.HeaderDictionary
 	StatusCode: 400
 	ReasonPhrase: Bad Request".ReplaceLineEndings(), await sut.Content.ReadAsStringAsync());
-            }
         }
+    }
 
-        [Fact]
-        public async Task GetRequest_ShouldThrowABadRequestException_As_b3_IsAnUnknownVersion()
+    [Fact]
+    public async Task GetRequest_ShouldThrowABadRequestException_As_b3_IsAnUnknownVersion()
+    {
+        using (var app = WebHostTestFactory.Create(services =>
+               {
+                   services.AddControllers().AddApplicationPart(typeof(FakeController).Assembly);
+                   services.AddRestfulApiVersioning(o =>
+                   {
+                       o.ValidAcceptHeaders.Clear();
+                   });
+               }, app =>
+               {
+                   app.UseRouting();
+                   app.UseEndpoints(routes => { routes.MapControllers(); });
+               }))
         {
-            using (var app = WebHostTestFactory.Create(services =>
-                   {
-                       services.AddControllers().AddApplicationPart(typeof(FakeController).Assembly);
-                       services.AddRestfulApiVersioning(o =>
-                       {
-                           o.ValidAcceptHeaders.Clear();
-                       });
-                   }, app =>
-                   {
-                       app.UseRouting();
-                       app.UseEndpoints(routes => { routes.MapControllers(); });
-                   }))
-            {
-                var client = app.Host.GetTestClient();
-                client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+            var client = app.Host.GetTestClient();
+            client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
 
-                await Assert.ThrowsAsync<BadRequestException>(() => client.GetAsync("/fake/"));
-            }
+            await Assert.ThrowsAsync<BadRequestException>(() => client.GetAsync("/fake/"));
         }
     }
 }
