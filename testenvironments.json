@@ -4,7 +4,7 @@
     {
       "name": "WSL-Ubuntu",
       "type": "wsl",
-      "wslDistribution": "Ubuntu-24.04"
+      "wslDistribution": "Ubuntu-26.04"
     },
     {
       "name": "Docker-Ubuntu (net10.0)",
